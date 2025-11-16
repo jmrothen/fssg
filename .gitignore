@@ -3,6 +3,5 @@
 .RData
 .Ruserdata
 R/scrapped/
-dev_notes/
 .Rprofile
 *.Rproj
