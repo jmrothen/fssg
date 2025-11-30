@@ -3,7 +3,7 @@
 #   custom_model <- list(
 #     name = '',               # this should be the shortened name that appears after d/p in the distribution functions i.e. "norm" in dnorm
 #     pars = c('','',''),      # a vector of each parameter name, exactly as they are stated in the d/p functions i.e c('mean','sd') for norm
-#     location= c(),           # IMPORTANT: specifies which parameters should vary based on the covariates in the model. Can usually omit shape /
+#     location= c(),           # IMPORTANT: specifies which parameter should vary based on the covariates in the model. Can usually omit shape /
 #                              #  true-locations (like minimum or boundary parameters). This also is a key part of specifying AFT/PH interpretation of your model
 #     transforms = c(),        # a vector of functions, one for each parameter, that transform the respective parameter into the real line. If param1 must be >0, log(param1) would be real
 #     inv.transforms=c(),      # a vector of functions which transform the real values back to the original scale. exp(log(param1) returns to the original range of param1
@@ -17,7 +17,7 @@
 # }
 
 
-### Important note: flexsurv by default only varies one model parameter (what is specified in the distributions as location)
+### Important note: flexsurv by default only varies one model parameter (what is specified in the distributions as `location`)
 # We can make more than one parameter vary though, using the anc parameter in flexsurvreg
 # Example: anc = list(shape1 = ~ var1 + var2, shape2 = ~ var3)
 # It may be worth adding in some anc options in the dist-list...
@@ -54,6 +54,7 @@ cumhazardify <- function(p_func){
     -log(sx)
   }
 }
+
 
 
 
@@ -117,8 +118,6 @@ check_inits <- function(times, distribution){
 
   return(any(dataframe$s))
 }
-
-
 
 
 
@@ -886,4 +885,33 @@ fssg_dist_list <- function(){
 
   dist_list <- c(flexsurv::flexsurv.dists, dist_list)
   return(dist_list)
+}
+
+
+#' Function to return a specific distribution object.
+#'
+#' @param dist_name Name of the distribution.
+#' @returns Distribution object.
+#' @export
+fssg_dist <- function(dist_name){
+  full_list <- fssg_dist_list()
+  out <- NULL
+
+  # we have three 'name' fields to check
+  ### List-level name
+  ### Object-attribute name
+  ### Object-attribute fullname
+
+  if(dist_name %in% names(full_list)){
+    out<- full_list[[dist_name]]
+  }
+  for(i in full_list){
+    if(dist_name %in% i$name | dist_name %in% i$fullname){
+      out<- i
+      break
+    }
+  }
+
+  if(is.null(out)){stop('Could not find distribution by that name')}
+  return(out)
 }

@@ -16,6 +16,7 @@ Imports:
     extraDistr,
     flexsurv,
     magrittr,
+    methods,
     Rcpp,
     stats,
     survAUC,
