@@ -13,16 +13,15 @@ usethis: use_data, use_data_raw
 
 
 
-If the push/pull buttons break, send a push with -u at the end.
-
-
-TODO:
-
-- better inits for levy, inverse_gaussian, hypertab, gam-gomp
-- better plotting alternative than just plot
-- integrate plotting into shotgun
-- additional models
-
-- NEW IDEA: IMPROVE SPECIFICATIONS TO FIT IN SURVIVAL AS WELL
-  - NEEDS THE FOLLOWING ITEMS:
-    - NAME, VARIANCE, PARMS, INIT, DEVIANCE, DENSITY, QUANTILE
+Current items to add:
+- General improvements to the GOF testing
+  - PIT method
+    - involves passing your times into p<dist> with the relevant fitted parameters, and then passing them into a histogram
+    - if fit is good, then hist should look flatly uniform
+    - can also pass into a ks.test with y='punif', or even goftest::ad.test
+  - ks.test and ad.test more generally can be used to test goodness of a distribution
+  - QQ plots
+    - requires q-function of dist, and then you qqplot(q<dist>(ppoints(nrow(data)), parameters), sort(times)), and use abline(0,1) for ref?
+  - CoxSnell residuals should be Exp(1)
+- Consider adding methods for ancillary parameters (can be passed to flexsurvreg)
+  - would likely require either new distribution objects or additional attributes on the object?
