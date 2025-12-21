@@ -55,6 +55,22 @@ cumhazardify <- function(p_func){
   }
 }
 
+quantilify <- function(p_func){
+  force(p_func)
+  function(p, lower = -1e6, upper = 1e6, ...) {
+    sapply(p, function(pi) {
+      if (is.na(pi)) return(NA_real_)
+      if (pi < 0 || pi > 1) return(NaN)
+      if (pi == 0) return(-Inf)
+      if (pi == 1) return( Inf)
+      uniroot(
+        function(x) p_func(x, ...) - pi,
+        lower = lower,
+        upper = upper
+      )$root
+    })
+  }
+}
 
 
 
@@ -142,6 +158,7 @@ fssg_dist_list <- function(){
     p = extraDistr::pbetapr,
     h = hazardify(extraDistr::dbetapr,extraDistr::pbetapr),
     H = cumhazardify(extraDistr::pbetapr),
+    q = quantilify(extraDistr::pbetapr),
     fullname='beta_prime'
   )
 
@@ -157,6 +174,7 @@ fssg_dist_list <- function(){
     p = extraDistr::pfatigue,
     h = hazardify(extraDistr::dfatigue,extraDistr::pfatigue),
     H = cumhazardify(extraDistr::pfatigue),
+    q = quantilify(extraDistr::pfatigue),
     fullname='birnbaum_saunders_shape'
   )
 
@@ -171,6 +189,7 @@ fssg_dist_list <- function(){
     p = extraDistr::pfatigue,
     h = hazardify(extraDistr::dfatigue,extraDistr::pfatigue),
     H = cumhazardify(extraDistr::pfatigue),
+    q = quantilify(extraDistr::pfatigue),
     fullname='birnbaum_saunders'
   )
 
@@ -185,6 +204,7 @@ fssg_dist_list <- function(){
     p = extraDistr::pfatigue,
     h = hazardify(extraDistr::dfatigue,extraDistr::pfatigue),
     H = cumhazardify(extraDistr::pfatigue),
+    q = quantilify(extraDistr::pfatigue),
     fullname='birnbaum_saunders_shape_location'
   )
 
@@ -199,6 +219,7 @@ fssg_dist_list <- function(){
     p = extraDistr::pfatigue,
     h = hazardify(extraDistr::dfatigue,extraDistr::pfatigue),
     H = cumhazardify(extraDistr::pfatigue),
+    q = quantilify(extraDistr::pfatigue),
     fullname='birnbaum_saunders_location'
   )
 
@@ -214,6 +235,7 @@ fssg_dist_list <- function(){
     p=VGAM::psinmad,
     h = hazardify(VGAM::dsinmad, VGAM::psinmad),
     H = cumhazardify(VGAM::psinmad),
+    q = quantilify(VGAM::psinmad),
     fullname='singh_maddala'
   )
 
@@ -229,6 +251,7 @@ fssg_dist_list <- function(){
     p= stats::pcauchy,
     h = hazardify(stats::dcauchy,  stats::pcauchy),
     H = cumhazardify(stats::pcauchy),
+    q = quantilify(stats::pcauchy),
     fullname='cauchy'
   )
 
@@ -243,6 +266,7 @@ fssg_dist_list <- function(){
     p= stats::pcauchy,
     h = hazardify(stats::dcauchy,  stats::pcauchy),
     H = cumhazardify(stats::pcauchy),
+    q = quantilify(stats::pcauchy),
     fullname='cauchy_location'
   )
 
@@ -258,6 +282,7 @@ fssg_dist_list <- function(){
     p = stats::pchisq,
     h = hazardify(stats::dchisq, stats::pchisq),
     H = cumhazardify(stats::pchisq),
+    q = quantilify(stats::pchisq),
     fullname='chi_squared'
   )
 
@@ -273,6 +298,7 @@ fssg_dist_list <- function(){
     p = stats::pchisq,
     h = hazardify(stats::dchisq, stats::pchisq),
     H = cumhazardify(stats::pchisq),
+    q = quantilify(stats::pchisq),
     fullname='non_central_chi_squared'
   )
 
@@ -288,6 +314,7 @@ fssg_dist_list <- function(){
     d = VGAM::ddagum,
     h = hazardify(VGAM::ddagum, VGAM::pdagum),
     H = cumhazardify(VGAM::pdagum),
+    q = quantilify(VGAM::pdagum),
     fullname='dagum'
   )
 
@@ -305,6 +332,7 @@ fssg_dist_list <- function(){
     d=VGAM::dexplog,
     h = hazardify(VGAM::dexplog, VGAM::pexplog),
     H = cumhazardify(VGAM::pexplog),
+    q = quantilify(VGAM::pexplog),
     fullname='exponential_logarithmic'
   )
 
@@ -320,6 +348,7 @@ fssg_dist_list <- function(){
     p=extraDistr::pgev,
     h = hazardify(extraDistr::dgev, extraDistr::pgev),
     H = cumhazardify(extraDistr::pgev),
+    q = quantilify(extraDistr::pgev),
     fullname='generalized_extreme_value'
   )
 
@@ -335,6 +364,7 @@ fssg_dist_list <- function(){
     p=stats::pf,
     h = hazardify(stats::df, stats::pf),
     H = cumhazardify(stats::pf),
+    q = quantilify(stats::pf),
     fullname='f'
   )
 
@@ -350,6 +380,7 @@ fssg_dist_list <- function(){
     p=stats::pf,
     h = hazardify(stats::df, stats::pf),
     H = cumhazardify(stats::pf),
+    q = quantilify(stats::pf),
     fullname='noncentral_f'
   )
 
@@ -365,6 +396,7 @@ fssg_dist_list <- function(){
     p= VGAM::pfoldnorm,
     h = hazardify(VGAM::dfoldnorm, VGAM::pfoldnorm),
     H = cumhazardify(VGAM::pfoldnorm),
+    q = quantilify(VGAM::pfoldnorm),
     fullname='folded_normal_location'
   )
 
@@ -380,6 +412,7 @@ fssg_dist_list <- function(){
     p= VGAM::pfoldnorm,
     h = hazardify(VGAM::dfoldnorm, VGAM::pfoldnorm),
     H = cumhazardify(VGAM::pfoldnorm),
+    q = quantilify(VGAM::pfoldnorm),
     fullname='folded_normal'
   )
 
@@ -395,6 +428,7 @@ fssg_dist_list <- function(){
     p= extraDistr::pfrechet,
     h = hazardify(extraDistr::dfrechet, extraDistr::pfrechet),
     H = cumhazardify(extraDistr::pfrechet),
+    q = quantilify(extraDistr::pfrechet),
     fullname='frechet'
   )
 
@@ -410,6 +444,7 @@ fssg_dist_list <- function(){
     p=pgamgomp,
     h = hazardify(dgamgomp, pgamgomp),
     H = cumhazardify(pgamgomp),
+    q = quantilify(pgamgomp),
     fullname='gamma_gompertz'
   )
 
@@ -425,6 +460,7 @@ fssg_dist_list <- function(){
     p=extraDistr::pgumbel,
     h = hazardify(extraDistr::dgumbel, extraDistr::pgumbel),
     H = cumhazardify(extraDistr::pgumbel),
+    q = quantilify(extraDistr::pgumbel),
     fullname='gumbel'
   )
 
@@ -440,6 +476,7 @@ fssg_dist_list <- function(){
     p=extraDistr::pinvchisq,
     h = hazardify(extraDistr::dinvchisq, extraDistr::pinvchisq),
     H = cumhazardify(extraDistr::pinvchisq),
+    q = quantilify(extraDistr::pinvchisq),
     fullname='inverse_chi_squared'
   )
 
@@ -455,6 +492,7 @@ fssg_dist_list <- function(){
     p=extraDistr::pinvchisq,
     h = hazardify(extraDistr::dinvchisq, extraDistr::pinvchisq),
     H = cumhazardify(extraDistr::pinvchisq),
+    q = quantilify(extraDistr::pinvchisq),
     fullname='scaled_inverse_chi_squared'
   )
 
@@ -471,6 +509,7 @@ fssg_dist_list <- function(){
     p=extraDistr::pinvgamma,
     h = hazardify(extraDistr::dinvgamma, extraDistr::pinvgamma),
     H = cumhazardify(extraDistr::pinvgamma),
+    q = quantilify(extraDistr::pinvgamma),
     fullname='inverse_gamma'
   )
 
@@ -486,6 +525,7 @@ fssg_dist_list <- function(){
     p=VGAM::pinv.gaussian,
     h = hazardify(VGAM::dinv.gaussian, VGAM::pinv.gaussian),
     H = cumhazardify(VGAM::pinv.gaussian),
+    q = quantilify(VGAM::pinv.gaussian),
     fullname='inverse_gaussian_location'
   )
 
@@ -500,6 +540,7 @@ fssg_dist_list <- function(){
     p=VGAM::pinv.gaussian,
     h = hazardify(VGAM::dinv.gaussian, VGAM::pinv.gaussian),
     H = cumhazardify(VGAM::pinv.gaussian),
+    q = quantilify(VGAM::pinv.gaussian),
     fullname='inverse_gaussian'
   )
 
@@ -515,6 +556,7 @@ fssg_dist_list <- function(){
     p=extraDistr::plaplace,
     h = hazardify(extraDistr::dlaplace, extraDistr::plaplace),
     H = cumhazardify(extraDistr::plaplace),
+    q = quantilify(extraDistr::plaplace),
     fullname='laplace'
   )
 
@@ -530,6 +572,7 @@ fssg_dist_list <- function(){
     p=VGAM::plevy,
     h = hazardify(VGAM::dlevy, VGAM::plevy),
     H = cumhazardify(VGAM::plevy),
+    q = quantilify(VGAM::plevy),
     fullname='levy'
   )
 
@@ -545,6 +588,7 @@ fssg_dist_list <- function(){
     p=plogcauchy,
     h = hazardify(dlogcauchy, plogcauchy),
     H = cumhazardify(plogcauchy),
+    q = quantilify(plogcauchy),
     fullname='log_cauchy_location'
   )
 
@@ -559,6 +603,7 @@ fssg_dist_list <- function(){
     p=plogcauchy,
     h = hazardify(dlogcauchy, plogcauchy),
     H = cumhazardify(plogcauchy),
+    q = quantilify(plogcauchy),
     fullname='log_cauchy'
   )
 
@@ -574,6 +619,7 @@ fssg_dist_list <- function(){
     p=extraDistr::plomax,
     h = hazardify(extraDistr::dlomax, extraDistr::plomax),
     H = cumhazardify(extraDistr::plomax),
+    q = quantilify(extraDistr::plomax),
     fullname='lomax'
   )
 
@@ -589,6 +635,7 @@ fssg_dist_list <- function(){
     p=extraDistr::plomax,
     h = hazardify(extraDistr::dlomax, extraDistr::plomax),
     H = cumhazardify(extraDistr::plomax),
+    q = quantilify(extraDistr::plomax),
     fullname='lomax_shape'
   )
 
@@ -604,6 +651,7 @@ fssg_dist_list <- function(){
     p=VGAM::pnaka,
     h=hazardify(VGAM::dnaka, VGAM::pnaka),
     H=cumhazardify(VGAM::pnaka),
+    q=quantilify(VGAM::pnaka),
     fullname='nakagami'
   )
 
@@ -619,6 +667,7 @@ fssg_dist_list <- function(){
     p=VGAM::pparetoI,
     h = hazardify(VGAM::dparetoI, VGAM::pparetoI),
     H = cumhazardify(VGAM::pparetoI),
+    q = quantilify(VGAM::pparetoI),
     fullname='pareto_type_1'
   )
 
@@ -634,6 +683,7 @@ fssg_dist_list <- function(){
     p=VGAM::pparetoII,
     h = hazardify(VGAM::dparetoII, VGAM::pparetoII),
     H = cumhazardify(VGAM::pparetoII),
+    q = quantilify(VGAM::pparetoII),
     fullname='pareto_type_2'
   )
 
@@ -649,6 +699,7 @@ fssg_dist_list <- function(){
     p=VGAM::pparetoIII,
     h = hazardify(VGAM::dparetoIII, VGAM::pparetoIII),
     H = cumhazardify(VGAM::pparetoIII),
+    q = quantilify(VGAM::pparetoIII),
     fullname='pareto_type_3'
   )
 
@@ -664,6 +715,7 @@ fssg_dist_list <- function(){
     p=VGAM::pparetoIV,
     h = hazardify(VGAM::dparetoIV, VGAM::pparetoIV),
     H = cumhazardify(VGAM::pparetoIV),
+    q = quantilify(VGAM::pparetoIV),
     fullname='pareto_type_4'
   )
 
@@ -679,6 +731,7 @@ fssg_dist_list <- function(){
     p=actuar::pfpareto,
     h = hazardify(actuar::dfpareto, actuar::pfpareto),
     H = cumhazardify(actuar::pfpareto),
+    q = quantilify(actuar::pfpareto),
     fullname='feller_pareto'
   )
 
@@ -694,6 +747,7 @@ fssg_dist_list <- function(){
     p=VGAM::ptruncpareto,
     h = hazardify(VGAM::dtruncpareto, VGAM::ptruncpareto),
     H = cumhazardify(VGAM::ptruncpareto),
+    q = quantilify(VGAM::ptruncpareto),
     fullname='truncated_pareto'
   )
 
@@ -709,6 +763,7 @@ fssg_dist_list <- function(){
     p=extraDistr::prayleigh,
     h = hazardify(extraDistr::drayleigh, extraDistr::prayleigh),
     H = cumhazardify(extraDistr::prayleigh),
+    q = quantilify(extraDistr::prayleigh),
     fullname='rayleigh'
   )
 
@@ -724,6 +779,7 @@ fssg_dist_list <- function(){
     p=VGAM::price,
     h = hazardify(VGAM::drice, VGAM::price),
     H = cumhazardify(VGAM::price),
+    q = quantilify(VGAM::price),
     fullname='rice_location'
   )
 
@@ -738,6 +794,7 @@ fssg_dist_list <- function(){
     p=VGAM::price,
     h = hazardify(VGAM::drice, VGAM::price),
     H = cumhazardify(VGAM::price),
+    q = quantilify(VGAM::price),
     fullname='rice'
   )
 
@@ -753,6 +810,7 @@ fssg_dist_list <- function(){
     p=extraDistr::psgomp,
     h = hazardify(extraDistr::dsgomp, extraDistr::psgomp),
     H = cumhazardify(extraDistr::psgomp),
+    q = quantilify(extraDistr::psgomp),
     fullname='shifted_gompertz'
   )
 
@@ -768,6 +826,7 @@ fssg_dist_list <- function(){
     p=VGAM::pgumbelII,
     h = hazardify(VGAM::dgumbelII, VGAM::pgumbelII),
     H = cumhazardify(VGAM::pgumbelII),
+    q = quantilify(VGAM::pgumbelII),
     fullname='gumbel_type_2'
   )
 
@@ -783,6 +842,7 @@ fssg_dist_list <- function(){
     p=phypertab,
     h = hazardify(dhypertab, phypertab),
     H = cumhazardify(phypertab),
+    q = quantilify(phypertab),
     fullname='hypertabastic'
   )
 
@@ -797,6 +857,7 @@ fssg_dist_list <- function(){
     p=phypertab,
     h = hazardify(dhypertab, phypertab),
     H = cumhazardify(phypertab),
+    q = quantilify(phypertab),
     fullname='hypertabastic'
   )
 
@@ -812,6 +873,7 @@ fssg_dist_list <- function(){
     p=VGAM::plind,
     h = hazardify(VGAM::dlind, VGAM::plind),
     H = cumhazardify(VGAM::plind),
+    q = quantilify(VGAM::plind),
     fullname='lindley'
   )
 
@@ -827,6 +889,7 @@ fssg_dist_list <- function(){
     p=pinvlind,
     h = hazardify(dinvlind, pinvlind),
     H = cumhazardify(pinvlind),
+    q = quantilify(pinvlind),
     fullname='inverse_lindley'
   )
 

@@ -118,3 +118,25 @@ get_fit_stats <- function(Surv_object, model, ibs=FALSE){
 
   return(out)
 }
+
+
+#' Quick QQ-plot for FSSG
+#'
+#' @param q_func A quantile function, usually taken from the distribution attribute `q`.
+#' @param times A vector of times from the dataset.
+#' @param ... Any additional arguments for the quantile function, ideally the model parameters.
+#'
+#' @returns Nothing, but prints the QQplot.
+fssg_qqplot <- function(q_func, times, ...){
+  q <- q_func(ppoints(length(times)), ...)
+  qqplot(
+    q,
+    sort(times),
+    xlab='Theoretical Quantiles',
+    ylab='Sample Quantiles',
+    main=paste('QQ-Plot for', substitute(q_func)),
+    conf.level=.95,
+    conf.args=list(col='lightgrey')
+  )
+  abline(0,1)
+}
