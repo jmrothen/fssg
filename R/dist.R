@@ -57,7 +57,8 @@ cumhazardify <- function(p_func){
 
 quantilify <- function(p_func){
   force(p_func)
-  function(p, lower = -1e6, upper = 1e6, ...) {
+  function(p, lower = -1e6, upper = 1e100, ...) {
+    lower_init <- if (p_func(0, ...) == 0) 0 else lower
     sapply(p, function(pi) {
       if (is.na(pi)) return(NA_real_)
       if (pi < 0 || pi > 1) return(NaN)
@@ -65,7 +66,7 @@ quantilify <- function(p_func){
       if (pi == 1) return( Inf)
       uniroot(
         function(x) p_func(x, ...) - pi,
-        lower = lower,
+        lower = lower_init,
         upper = upper
       )$root
     })
