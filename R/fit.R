@@ -120,23 +120,37 @@ get_fit_stats <- function(Surv_object, model, ibs=FALSE){
 }
 
 
-#' Quick QQ-plot for FSSG
+
+#' Quick QQ-plot for Flexsurv outputs
 #'
-#' @param q_func A quantile function, usually taken from the distribution attribute `q`.
+#' @param
 #' @param times A vector of times from the dataset.
 #' @param ... Any additional arguments for the quantile function, ideally the model parameters.
 #'
 #' @returns Nothing, but prints the QQplot.
-fssg_qqplot <- function(q_func, times, ...){
-  q <- q_func(ppoints(length(times)), ...)
+fssg_qqplot <- function(flexsurv_output, ...){
+  q_func <- flexsurv_output$dlist$q
+  times <- sort(flexsurv_output$data$m[,1])
+  if(dim(flexsurv_output$res)[1]<=1){
+    params <- list(flexsurv_output$res[,1])
+    names(params) <- rownames(flexsurv_output$res)
+  }else{
+    params <- as.list(flexsurv_output$res[,1])
+  }
+
+  p_vec <- list(ppoints(length(times)))
+
+  q <- do.call(q_func, c(p=p_vec, params))
   qqplot(
     q,
-    sort(times),
+    sort(times[,1]),
     xlab='Theoretical Quantiles',
     ylab='Sample Quantiles',
-    main=paste('QQ-Plot for', substitute(q_func)),
+    main=paste('QQ-Plot for', flexsurv_output$dlist$fullname),
     conf.level=.95,
-    conf.args=list(col='lightgrey')
+    conf.args=list(col='lightgrey'),
+    ...
   )
   abline(0,1)
 }
+
