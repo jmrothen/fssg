@@ -125,7 +125,7 @@ get_fit_stats <- function(Surv_object, model, ibs=FALSE){
 #'
 #' @param
 #' @param times A vector of times from the dataset.
-#' @param ... Any additional arguments for the quantile function, ideally the model parameters.
+#' @param ... Any additional arguments for the qqplot function.
 #'
 #' @returns Nothing, but prints the QQplot.
 fssg_qqplot <- function(flexsurv_output, ...){
