@@ -7,7 +7,7 @@
 check_inits(times, distribution)
 }
 \arguments{
-\item{times}{Surv object or numeric vector.}
+\item{times}{'Surv' object or numeric vector.}
 
 \item{distribution}{A distribution object from fssg_dist_lists.}
 }

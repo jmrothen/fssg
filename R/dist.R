@@ -30,112 +30,55 @@
 # S<dist> = 1-p<dist>
 # h<dist> = d<dist> / S<dist>
 # H<dist> = -log(S<dist>)
-survivify <- function(p_func){
-  force(p_func)  # ensure it's evaluated in the parent environment
+survivify <- function(p_function){
+  force(p_function)  # ensure it's evaluated in the parent environment
   function(...) {
-    1 - p_func(...)
+    1 - p_function(...)
   }
 }
 
-hazardify <- function(d_func, p_func){
-  force(d_func)
-  force(p_func)
+hazardify <- function(d_function, p_function){
+  force(d_function)
+  force(p_function)
   function(x, ...){
-    fx <- d_func(x, ...)
-    Fx <- p_func(q=x, ...)
+    fx <- d_function(x, ...)
+    Fx <- p_function(q=x, ...)
     fx/ (1-Fx)
   }
 }
 
-cumhazardify <- function(p_func){
-  force(p_func)
+cumhazardify <- function(p_function){
+  force(p_function)
   function(x, ...){
-    sx <- 1 - p_func(q=x,...)
+    sx <- 1 - p_function(q=x,...)
     -log(sx)
   }
 }
 
-quantilify <- function(p_func){
-  force(p_func)
-  function(p, lower = -1e6, upper = 1e100, ...) {
-    lower_init <- if (p_func(0, ...) == 0) 0 else lower
-    sapply(p, function(pi) {
-      if (is.na(pi)) return(NA_real_)
-      if (pi < 0 || pi > 1) return(NaN)
-      if (pi == 0) return(-Inf)
-      if (pi == 1) return( Inf)
-      uniroot(
-        function(x) p_func(x, ...) - pi,
-        lower = lower_init,
-        upper = upper
-      )$root
-    })
+# Additional Function to create a rough q<dist> function based on p<dist>
+quantilify <- function(p_function){
+  force(p_function)
+  function(p, ...) {
+    lower = -1e6
+    upper = 1e100
+    # for distributions with limited domain, adjust lower bound (handles most cases)
+    lower_init <- if (p_function(0, ...) == 0) 0 else lower
+    sapply(p,
+      function(pi) {
+        # handle edge cases
+        if(is.na(pi)){return(NA_real_)}
+        if(pi<0||pi>1){return(NaN)}
+        if(pi==0){return(-Inf)}
+        if(pi==1){return(Inf)}
+        stats::uniroot(
+          function(x) p_function(x, ...) - pi,
+          lower = lower_init,
+          upper = upper
+        )$root
+      }
+    )
   }
 }
-
-
-
-#' Function to check if times can be calculated using the distribution with default inits.
-#'
-#' @param times Surv object or numeric vector.
-#' @param distribution A distribution object from fssg_dist_lists.
-#' @returns Boolean indicator for success. If true, then all values can be calculated, and life is good.
-#' @export
-check_inits <- function(times, distribution){
-  # accepts a vector or Surv object
-  if(methods::is(times,'Surv')){
-    times[,1] %>%
-      as.numeric() %>%
-      unique() %>%
-      sort() -> time_vector
-  }else{
-    times %>%
-      as.numeric() %>%
-      unique() %>%
-      sort() -> time_vector
-  }
-
-  if('d' %in% names(distribution)){
-    dfunc <- distribution$d
-  }else{
-    dfunc <- get(paste('d', distribution$name, sep=''))
-  }
-
-  inits <- distribution$inits(time_vector)
-
-  dfunc %>%
-    formals() %>%
-    names() %>%
-    setdiff(c('log')) -> arguments
-
-
-  dataframe <- data.frame(t = time_vector, p = NA, s = F)
-
-  for(i in 1:length(time_vector)){
-    as.list(c(time_vector[i], inits)) %>%
-      stats::setNames(c(arguments)) %>%
-      do.call(what=dfunc, args=.) -> dataframe$p[i]
-
-    dataframe$s[i] <- is.finite(dataframe$p[i])
-  }
-
-  if(!any(dataframe$s)){
-    message("Found some weird entries")
-
-    dataframe %>%
-      dplyr::filter(s=F) %>%
-      print()
-  }else{
-    message("Works at every time point!")
-    plot(
-      x = dataframe$t[dataframe$s],
-      y = dataframe$p[dataframe$s],
-      type='o', main = 'Distribution with Default Inits',xlab = 'Times', ylab='Probability Density',sub=substitute(density_function))
-  }
-
-  return(any(dataframe$s))
-}
-
 
 
 
@@ -952,6 +895,7 @@ fssg_dist_list <- function(){
 }
 
 
+
 #' Function to return a specific distribution object.
 #'
 #' @param dist_name Name of the distribution.
@@ -967,15 +911,79 @@ fssg_dist <- function(dist_name){
   ### Object-attribute fullname
 
   if(dist_name %in% names(full_list)){
-    out<- full_list[[dist_name]]
+    out <- full_list[[dist_name]]
   }
   for(i in full_list){
     if(dist_name %in% i$name | dist_name %in% i$fullname){
-      out<- i
+      out <- i
       break
     }
   }
-
   if(is.null(out)){stop('Could not find distribution by that name')}
   return(out)
 }
+
+
+
+#' Function to check if times can be calculated using the distribution with default inits.
+#'
+#' @param times 'Surv' object or numeric vector.
+#' @param distribution A distribution object from fssg_dist_lists.
+#' @returns Boolean indicator for success. If true, then all values can be calculated, and life is good.
+#' @export
+check_inits <- function(times, distribution){
+  # accepts a vector or Surv object
+  if(methods::is(times,'Surv')){
+    times[,1] %>%
+      as.numeric() %>%
+      unique() %>%
+      sort() -> time_vector
+  }else{
+    times %>%
+      as.numeric() %>%
+      unique() %>%
+      sort() -> time_vector
+  }
+
+  # check distribution format: fssg and flexsurv distributions have different attributes
+  if('d' %in% names(distribution)){
+    dfunc <- distribution$d
+  }else{
+    dfunc <- get(paste('d', distribution$name, sep=''))
+  }
+
+  inits <- distribution$inits(time_vector)
+
+  dfunc %>%
+    formals() %>%
+    names() %>%
+    setdiff(c('log')) -> arguments
+
+
+  dataframe <- data.frame(t = time_vector, p = NA, s = F)
+
+  for(i in 1:length(time_vector)){
+    as.list(c(time_vector[i], inits)) %>%
+      stats::setNames(c(arguments)) %>%
+      do.call(what=dfunc, args=.) -> dataframe$p[i]
+
+    dataframe$s[i] <- is.finite(dataframe$p[i])
+  }
+
+  if(!any(dataframe$s)){
+    message("Found some weird entries")
+
+    dataframe %>%
+      dplyr::filter(s=F) %>%
+      print()
+  }else{
+    message("Works at every time point!")
+    plot(
+      x = dataframe$t[dataframe$s],
+      y = dataframe$p[dataframe$s],
+      type='o', main = 'Distribution with Default Inits',xlab = 'Times', ylab='Probability Density',sub=substitute(density_function))
+  }
+
+  return(any(dataframe$s))
+}
+

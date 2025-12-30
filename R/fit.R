@@ -123,9 +123,8 @@ get_fit_stats <- function(Surv_object, model, ibs=FALSE){
 
 #' Quick QQ-plot for Flexsurv outputs
 #'
-#' @param
-#' @param times A vector of times from the dataset.
-#' @param ... Any additional arguments for the quantile function, ideally the model parameters.
+#' @param flexsurv_output Output from a flexsurvreg model. Can also pass along output from fssg, particularly from <fssg output>$models$<model of interest>
+#' @param ... Any additional arguments for the qqplot function.
 #'
 #' @returns Nothing, but prints the QQplot.
 fssg_qqplot <- function(flexsurv_output, ...){
@@ -138,10 +137,10 @@ fssg_qqplot <- function(flexsurv_output, ...){
     params <- as.list(flexsurv_output$res[,1])
   }
 
-  p_vec <- list(ppoints(length(times)))
+  p_vec <- list(stats::ppoints(length(times)))
 
   q <- do.call(q_func, c(p=p_vec, params))
-  qqplot(
+  stats::qqplot(
     q,
     sort(times[,1]),
     xlab='Theoretical Quantiles',
@@ -151,6 +150,6 @@ fssg_qqplot <- function(flexsurv_output, ...){
     conf.args=list(col='lightgrey'),
     ...
   )
-  abline(0,1)
+  graphics::abline(0,1)
 }
 
