@@ -123,12 +123,7 @@ get_fit_stats <- function(Surv_object, model, ibs=FALSE){
 
 #' Quick QQ-plot for Flexsurv outputs
 #'
-<<<<<<< HEAD
 #' @param flexsurv_output Output from a flexsurvreg model. Can also pass along output from fssg, particularly from <fssg output>$models$<model of interest>
-=======
-#' @param
-#' @param times A vector of times from the dataset.
->>>>>>> 5c1431e392b131da0cbbe5120f2ab2c102f0c9bc
 #' @param ... Any additional arguments for the qqplot function.
 #'
 #' @returns Nothing, but prints the QQplot.
