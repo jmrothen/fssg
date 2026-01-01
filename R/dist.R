@@ -70,8 +70,13 @@ quantilify <- function(p_function){
         if(pi<0||pi>1){return(NaN)}
         if(pi==0){return(-Inf)}
         if(pi==1){return(Inf)}
+<<<<<<< HEAD
         stats::uniroot(
           function(x) p_function(x, ...) - pi,
+=======
+        uniroot(
+          function(x) p_func(x, ...) - pi,
+>>>>>>> 5c1431e392b131da0cbbe5120f2ab2c102f0c9bc
           lower = lower_init,
           upper = upper
         )$root
