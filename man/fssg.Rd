@@ -52,6 +52,6 @@ FSSG: Flexsurv Shotgun.
 }
 \examples{
 library(survival)
-fssg(Surv(time, status)~1, data=aml, dump_models=TRUE, warn = TRUE)
+fssg(Surv(time, status)~1, data=aml, models=c('genf','exp','dagum','lomax','rayleigh','betaprime','fatigue','gamgomp'), warn = TRUE)
 
 }
