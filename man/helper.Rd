@@ -44,3 +44,10 @@ H\if{html}{\out{<dist>}} = -log(S\if{html}{\out{<dist>}})
 
 q\if{html}{\out{<dist>}} = quantile function (p\if{html}{\out{<dist>}})
 }
+\examples{
+survivify(pnorm)
+hazardify(dnorm, pnorm)
+cumhazardify(pnorm)
+quantilify(pnorm)
+
+}

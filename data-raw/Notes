@@ -25,3 +25,8 @@ Current items to add:
   - CoxSnell residuals should be Exp(1)
 - Consider adding methods for ancillary parameters (can be passed to flexsurvreg)
   - would likely require either new distribution objects or additional attributes on the object?
+
+
+
+######## CYRRENT AS OF 4/12/26
+# rewrite potions of fssg to fix the 'no visible global variables' portions

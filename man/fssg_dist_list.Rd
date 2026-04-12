@@ -12,3 +12,9 @@ a list of all possible distributions
 \description{
 Compiles list of available distributions
 }
+\examples{
+
+fdl <- fssg_dist_list
+
+
+}

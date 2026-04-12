@@ -2,9 +2,12 @@
 % Please edit documentation in R/dist.R
 \name{check_inits}
 \alias{check_inits}
+\alias{bulk_check_inits}
 \title{Function to check if times can be calculated using the distribution with default inits.}
 \usage{
 check_inits(times, distribution)
+
+bulk_check_inits(times)
 }
 \arguments{
 \item{times}{'Surv' object or numeric vector.}
@@ -16,4 +19,22 @@ Boolean indicator for success. If true, then all values can be calculated, and l
 }
 \description{
 Function to check if times can be calculated using the distribution with default inits.
+}
+\details{
+This should work with all fssg custom distribution, but does not work on some of the native flexsurv distributions.
+}
+\examples{
+
+# choose a distribution
+dist <- get_fssg_dist('gamma_gompertz')
+
+# identify all of the actual survival times
+times <- rpois(1000, 100) # simulated times
+
+# check if the distribution can be calculated at each time with default inits
+check_inits(times, dist)
+
+# can loop through all distributions
+bulk_check_inits(times)
+
 }

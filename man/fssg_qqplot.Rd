@@ -17,3 +17,14 @@ Nothing, but prints the QQplot.
 \description{
 Quick QQ-plot for Flexsurv outputs
 }
+\details{
+Currently only works for simple models.
+}
+\examples{
+require(survival)
+require(flexsurv)
+
+flexsurvreg(Surv(time,status) ~ 1, data=cancer, dist= get_fssg_dist('gamma_gompertz')) -> model
+fssg_qqplot(model)
+
+}

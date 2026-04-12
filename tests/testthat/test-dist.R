@@ -121,7 +121,7 @@ test_that("Distribution list items works", {
     }
   )
   expect_in(
-    c('lindley', 'genf','weibull','gamgomp'),
+    c('lindley', 'genf','weibull','gamma_gompertz'),
     names(fssg_dist_list())
   )
 })

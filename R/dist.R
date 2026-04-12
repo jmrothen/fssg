@@ -1,9 +1,9 @@
 #' FFSG_DIST
 #'
 #' flexsurv allows for the creating of custom distributions, which must follow a specific format to use the flexsurv functions.
-#' FSSG uses a modified version of this formatting, which specifies the relevant distribution functions directly.
+#' fssg uses a modified version of this formatting, which specifies the relevant distribution functions directly.
 #'
-#' FSSG distributions should be specified as a list, with the following attributes.
+#' fssg distributions should be specified as a list, with the following attributes.
 #'
 #' @param name Simple short hand name for the relevant distribution. flexsurv will search for the distribution functions using this name by default if the functions aren't explicitly defined. E.g. 'norm' for pnorm, dnorm, etc.
 #'
@@ -52,6 +52,22 @@
 #' @references flexsurv vignette by Christopher H. Jackson https://cran.r-project.org/web/packages/flexsurv/vignettes/flexsurv.pdf
 #'
 #' @name fssg_dist
+#'
+#' @examples
+#' fssg_dist(
+#'   name = 'betapr',
+#'   pars= c('shape1','shape2','scale'),
+#'   location='scale',
+#'   transforms= c(log,log,log),
+#'   inv.transforms= c(exp,exp,exp),
+#'   inits= function(t){c(3, 2, 1)},  # can be improved
+#'   d = extraDistr::dbetapr,
+#'   p = extraDistr::pbetapr,
+#'   q = quantilify(extraDistr::pbetapr),
+#'   h = hazardify(extraDistr::dbetapr,extraDistr::pbetapr),
+#'   H = cumhazardify(extraDistr::pbetapr),
+#'   fullname='beta_prime'
+#' )
 #' @export
 fssg_dist <- function(name, pars, location, transforms, inv.transforms, inits, d, p, q, h, H, fullname){
   return(list(
@@ -97,6 +113,12 @@ fssg_dist <- function(name, pars, location, transforms, inv.transforms, inits, d
 #' cumhazardify returns H(t)
 #'
 #' quantilify returns an estimated quantile function.
+#'
+#' @examples
+#' survivify(pnorm)
+#' hazardify(dnorm, pnorm)
+#' cumhazardify(pnorm)
+#' quantilify(pnorm)
 #'
 #' @name helper
 NULL
@@ -163,6 +185,11 @@ quantilify <- function(p_function){
 #' Compiles list of available distributions
 #'
 #' @returns a list of all possible distributions
+#' @examples
+#'
+#' fdl <- fssg_dist_list
+#'
+#'
 #' @export
 fssg_dist_list <- function(){
 
@@ -976,6 +1003,11 @@ fssg_dist_list <- function(){
 #'
 #' @param dist_name Name of the distribution.
 #' @returns Distribution object.
+#' @examples
+#' get_fssg_dist('weibull')
+#' get_fssg_dist('f')
+#' get_fssg_dist('gamma_gompertz')
+#'
 #' @export
 get_fssg_dist <- function(dist_name){
   full_list <- fssg_dist_list()
@@ -1009,6 +1041,20 @@ get_fssg_dist <- function(dist_name){
 #'
 #' @details This should work with all fssg custom distribution, but does not work on some of the native flexsurv distributions.
 #' @name check_inits
+#'
+#' @examples
+#'
+#' # choose a distribution
+#' dist <- get_fssg_dist('gamma_gompertz')
+#'
+#' # identify all of the actual survival times
+#' times <- rpois(1000, 100) # simulated times
+#'
+#' # check if the distribution can be calculated at each time with default inits
+#' check_inits(times, dist)
+#'
+#' # can loop through all distributions
+#' bulk_check_inits(times)
 #'
 #' @export
 check_inits <- function(times, distribution){
@@ -1045,7 +1091,7 @@ check_inits <- function(times, distribution){
   for(i in 1:length(time_vector)){
     as.list(c(time_vector[i], inits)) %>%
       stats::setNames(c(arguments)) %>%
-      do.call(what=dfunc, args=.) -> dataframe$p[i]
+      do.call(what=dfunc) -> dataframe$p[i]
 
     dataframe$s[i] <- is.finite(dataframe$p[i])
   }

@@ -5,3 +5,4 @@
 R/scrapped/
 .Rprofile
 *.Rproj
+release.R

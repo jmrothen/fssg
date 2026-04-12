@@ -9,6 +9,12 @@ This is done by running 60+ different parametric survival curves in order to see
 
 ## Installation
 
+You can install the package through CRAN using:
+
+``` r
+install.packages('fssg')
+```
+
 You can install the development version of fssg like so:
 
 ``` r
