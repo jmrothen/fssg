@@ -126,6 +126,8 @@ get_fit_stats <- function(Surv_object, model, ibs=FALSE){
 #' @param flexsurv_output Output from a flexsurvreg model. Can also pass along output from fssg, particularly from <fssg output>$models$<model of interest>
 #' @param ... Any additional arguments for the qqplot function.
 #'
+#' @details Does not work for flexsurv native distributions.
+#'
 #' @returns Nothing, but prints the QQplot.
 fssg_qqplot <- function(flexsurv_output, ...){
   q_func <- flexsurv_output$dlist$q

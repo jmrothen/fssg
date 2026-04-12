@@ -23,13 +23,24 @@ quantilify(p_function)
 }
 \value{
 A new function of the desired type with the same parameters as the input functions.
+
+survivify returns the function S(t).
+
+hazardify returns the function h(t).
+
+cumhazardify returns H(t)
+
+quantilify returns an estimated quantile function.
 }
 \description{
 Couple of functions that extrapolate the S, h, and H functions based on pdf/cdf
 }
 \details{
 S\if{html}{\out{<dist>}} = 1-p\if{html}{\out{<dist>}}
+
 h\if{html}{\out{<dist>}} = d\if{html}{\out{<dist>}} / S\if{html}{\out{<dist>}}
+
 H\if{html}{\out{<dist>}} = -log(S\if{html}{\out{<dist>}})
+
 q\if{html}{\out{<dist>}} = quantile function (p\if{html}{\out{<dist>}})
 }
