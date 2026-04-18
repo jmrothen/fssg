@@ -2,7 +2,7 @@
 % Please edit documentation in R/fssg.R
 \name{fssg}
 \alias{fssg}
-\title{FSSG: Flexsurv Shotgun.}
+\title{fssg: Flexsurv "Shotgun".}
 \usage{
 fssg(
   formula,
@@ -26,21 +26,27 @@ fssg(
 
 \item{models}{Vector of strings. If you only want to run specific models, specify them here by their list name in fssg_dist_list.}
 
-\item{skip}{Vector. If you want to skip any specific models, you can add their names here. By default, some of the repetitive or incredibly niche models are skipped.}
+\item{skip}{Vector. If you want to skip any specific models, you can add their names here.
+By default, some of the repetitive or incredibly niche models are skipped.}
 
-\item{opt_method}{String. By default, 'BFGS' is used in flexsurvreg, however some distributions appreciate the more flexible 'Nelder-Mead' method. This is passed to the "optim" function as method = opt_method.}
+\item{opt_method}{String. By default, 'BFGS' is used in flexsurvreg, however some distributions
+appreciate the more flexible 'Nelder-Mead' method. This is passed to the "optim" function as method = opt_method.}
 
-\item{spline}{Vector. Should include 'rp' for Royston-Parmar natural cubic spline. Can also include 'wy' for Wang-Yan alternative natural cubic spline. The Wang-Yan version requires the package 'splines2ns'. If set to NA, then the spline step will be skipped.}
+\item{spline}{String or Vector of Strings. Include 'rp' or 'wy' for
+Royston-Parmar natural cubic spline, or Wang-Yan alternative natural cubic spline respectively.
+The Wang-Yan version requires the package 'splines2ns'.
+If set to NA, then the spline step will be skipped.}
 
-\item{max_knots}{Integer. Specifies the maximum number of knots considered in spline models.}
+\item{max_knots}{Integer. Specifies the maximum number of knots to be considered in spline models.}
 
-\item{dump_models}{Logical. If TRUE, each successful model will be placed into a list and returned by the function invisibly.}
+\item{dump_models}{Logical. If TRUE, each successful model will be placed into a list and returned.}
 
 \item{detailed}{Logical. If True, calculates a number of additional fit statistics for each model.}
 
-\item{ibs}{Logical. If TRUE, calculate integrated brier score for each model. Please note that this greatly increases run time, and is not recommended for extremely large data.}
+\item{ibs}{Logical. If TRUE, calculate integrated brier score for each model.
+Please note that this greatly increases run time, and is not recommended for large data.}
 
-\item{progress}{Logical. Want progress updates?}
+\item{progress}{Logical. If TRUE, prints progress updates while the function runs.}
 
 \item{warn}{Logical. If TRUE, also prints any warnings that appear.}
 }
@@ -48,7 +54,7 @@ fssg(
 List containing a summary of the models generated. If dump_models is True, also returns a list of generated models.
 }
 \description{
-FSSG: Flexsurv Shotgun.
+fssg: Flexsurv "Shotgun".
 }
 \examples{
 library(survival)
@@ -56,6 +62,8 @@ fssg(
   Surv(time, status)~1,
   data=aml,
   models=c('genf','exp','dagum','lomax','rayleigh','betaprime','fatigue','gamgomp'),
+  spline = c('rp'),
+  max_knots=2,
   warn = TRUE
 )
 

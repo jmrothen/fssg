@@ -1,18 +1,26 @@
-## This script contains the primary fssg function
-
-#' FSSG: Flexsurv Shotgun.
+#' fssg: Flexsurv "Shotgun".
 #'
 #' @param formula Formula. Should be a survival formula, with a Surv object on the left hand side.
 #' @param data If your formula needs a dataset, provide that here.
 #' @param models Vector of strings. If you only want to run specific models, specify them here by their list name in fssg_dist_list.
-#' @param skip Vector. If you want to skip any specific models, you can add their names here. By default, some of the repetitive or incredibly niche models are skipped.
-#' @param opt_method String. By default, 'BFGS' is used in flexsurvreg, however some distributions appreciate the more flexible 'Nelder-Mead' method. This is passed to the "optim" function as method = opt_method.
-#' @param spline Vector. Should include 'rp' for Royston-Parmar natural cubic spline. Can also include 'wy' for Wang-Yan alternative natural cubic spline. The Wang-Yan version requires the package 'splines2ns'. If set to NA, then the spline step will be skipped.
-#' @param max_knots Integer. Specifies the maximum number of knots considered in spline models.
-#' @param dump_models Logical. If TRUE, each successful model will be placed into a list and returned by the function invisibly.
+#' @param skip Vector. If you want to skip any specific models, you can add their names here.
+#' By default, some of the repetitive or incredibly niche models are skipped.
+#'
+#' @param opt_method String. By default, 'BFGS' is used in flexsurvreg, however some distributions
+#' appreciate the more flexible 'Nelder-Mead' method. This is passed to the "optim" function as method = opt_method.
+#'
+#' @param spline String or Vector of Strings. Include 'rp' or 'wy' for
+#' Royston-Parmar natural cubic spline, or Wang-Yan alternative natural cubic spline respectively.
+#' The Wang-Yan version requires the package 'splines2ns'.
+#' If set to NA, then the spline step will be skipped.
+#'
+#' @param max_knots Integer. Specifies the maximum number of knots to be considered in spline models.
+#' @param dump_models Logical. If TRUE, each successful model will be placed into a list and returned.
 #' @param detailed Logical. If True, calculates a number of additional fit statistics for each model.
-#' @param ibs Logical. If TRUE, calculate integrated brier score for each model. Please note that this greatly increases run time, and is not recommended for extremely large data.
-#' @param progress Logical. Want progress updates?
+#' @param ibs Logical. If TRUE, calculate integrated brier score for each model.
+#' Please note that this greatly increases run time, and is not recommended for large data.
+#'
+#' @param progress Logical. If TRUE, prints progress updates while the function runs.
 #' @param warn Logical. If TRUE, also prints any warnings that appear.
 #' @returns List containing a summary of the models generated. If dump_models is True, also returns a list of generated models.
 #'
@@ -22,6 +30,8 @@
 #'   Surv(time, status)~1,
 #'   data=aml,
 #'   models=c('genf','exp','dagum','lomax','rayleigh','betaprime','fatigue','gamgomp'),
+#'   spline = c('rp'),
+#'   max_knots=2,
 #'   warn = TRUE
 #' )
 #'
@@ -32,7 +42,7 @@ fssg <- function(
     models=NA,
     skip=c('default'),
     opt_method = 'BFGS',
-    spline=NA,   # c('rp', 'wy')
+    spline=NA,
     max_knots=1,
     dump_models=TRUE,
     detailed=TRUE,
@@ -43,16 +53,16 @@ fssg <- function(
   # The default distribution list will exclude the following. Comments describe why
   if(length(skip)==1 & skip[1]=='default'){
     skip <- c(
-      'weibullPH',                  # identical to other weibull
-      'genf.orig',                  # running genf instead
-      'gengamma.orig',              # running gengamma instead
+      # 'weibullPH',                  # identical to other weibull
+      # 'genf.orig',                  # running genf instead
+      # 'gengamma.orig',              # running gengamma instead
+      # 'chisq',                      # very rarely useful
+      # 'non_central_chi_squared',    # very rarely useful
+      # 'levy' ,                       # VGAM has functions, but theyre of an odd structure and not documented
       'erlang',                     # erlang is temporarily removed anyways
       'truncpareto',                # have yet to get this to work
-      'chisq',                      # very rarely useful
-      'non_central_chi_squared',    # very rarely useful
       'exponential',                # flexsurv's distribution list has 'exp','exponential', which are identical in practice. So we toss this one
-      'lognormal',                  # flexsurv's distribution list has 'lognormal','loggaussian', which are identical in practice. So we toss this one
-      'levy'                        # VGAM has functions, but theyre of an odd structure and not documented
+      'lognormal'                   # flexsurv's distribution list has 'lognormal','loggaussian', which are identical in practice. So we toss this one
     )
   }
 
@@ -116,7 +126,6 @@ fssg <- function(
     working_model_list <- list()
   }
 
-
   # if specific models were specified, then we can filter to those
   if(!anyNA(models)){
     dist_list <- dist_list[names(dist_list) %in% models]
@@ -126,6 +135,7 @@ fssg <- function(
   iter <- 1
   for(i in dist_list){
 
+    # loop level names
     current_dist <- names(dist_list)[iter]
     custom_indicator <- !(current_dist %in% names(flexsurv::flexsurv.dists))
     current_source <- ifelse(custom_indicator, 'fssg','flexsurv')
@@ -163,14 +173,16 @@ fssg <- function(
       # additional level of obfuscation here to allow for us to continue on warnings
       withCallingHandlers({
 
-        # if working with a native distribution, we'll not specify the <dfns> argument
+        # if working with a flexsurv native distribution, we'll not specify the <dfns> argument
         if(!custom_indicator){
           if(data_req){
             flexsurv::flexsurvreg(formula, dist=current_dist, data=data, method=opt_method) %>% suppressMessages() -> current_model
           }else{
             flexsurv::flexsurvreg(formula, dist=current_dist, method=opt_method) %>% suppressMessages() -> current_model
           }
-        }else{ # for custom distributions, we specify the DFNs
+        }
+        # for custom distributions, we specify the DFNs
+        else{
           if(data_req){
             flexsurv::flexsurvreg(formula, dist=i, data=data, dfns=list(d=i$d, p=i$p), method=opt_method) %>% suppressMessages() -> current_model
           }else{
@@ -181,7 +193,7 @@ fssg <- function(
         # if model succeeds, collect information
         current_aic <- stats::AIC(current_model)
         current_bic <- stats::BIC(current_model)
-        current_ll <- current_model$loglik
+        current_ll  <- current_model$loglik
 
         dist_success<-T
 
@@ -192,7 +204,6 @@ fssg <- function(
 
 
         if(detailed){
-        ### should add the case to pase Surv functions of the form Surv(time1, time2, status), which would use length(formula[[2]])
           if(data_req){
             time_portion <-   dplyr::pull(data[c(as.character(formula[[2]][[2]]))])
             status_portion <- dplyr::pull(data[c(as.character(formula[[2]][[3]]))])
@@ -202,14 +213,14 @@ fssg <- function(
           }
           fitstats <- get_fit_stats(Surv_object, model = current_model, ibs)
 
-          current_iAUC <- fitstats$iAUC.Full
+          current_iAUC   <- fitstats$iAUC.Full
           current_Cindex <- fitstats$C.Index
           current_Unos.C <- fitstats$C.Index.Uno
-          current_brier <- fitstats$Brier.Median
-          current_mae <- fitstats$MAE
-          current_iae <- fitstats$IAE.Full
-          current_ise <- fitstats$ISE.Full
-          current_ibs <- ifelse(ibs, fitstats$IBS.Full, NA)
+          current_brier  <- fitstats$Brier.Median
+          current_mae    <- fitstats$MAE
+          current_iae    <- fitstats$IAE.Full
+          current_ise    <- fitstats$ISE.Full
+          current_ibs    <- ifelse(ibs, fitstats$IBS.Full, NA)
         }
       },
 
@@ -281,18 +292,18 @@ fssg <- function(
       current_dist <- paste('spline',ifelse(mvec[s]=='rp','rp','wy'), svec[s], kvec[s], sep='_')
 
       # reset iteration level variables
-      dist_success<- F
-      current_aic <- NA
-      current_bic <- NA
-      current_ll <- NA
-      current_iAUC <- NA
+      dist_success   <- F
+      current_aic    <- NA
+      current_bic    <- NA
+      current_ll     <- NA
+      current_iAUC   <- NA
       current_Cindex <- NA
       current_Unos.C <- NA
-      current_brier <- NA
-      current_mae <- NA
-      current_iae <- NA
-      current_ise <- NA
-      current_ibs <- NA
+      current_brier  <- NA
+      current_mae    <- NA
+      current_iae    <- NA
+      current_ise    <- NA
+      current_ibs    <- NA
 
       tryCatch({
 
@@ -385,54 +396,54 @@ fssg <- function(
   ##### We want to aggregate the bests fit via statistics
   dplyr::mutate(
     dist_summary,
-    best_aic = (aic== min(aic,na.rm=T)),  # lower = better
-    best_bic = (bic== min(bic,na.rm=T)),  # lower = better
-    best_loglik = (loglik== max(loglik,na.rm=T)) # greater = better
+    best_aic = (dist_summary$aic== min(dist_summary$aic,na.rm=T)),  # lower = better
+    best_bic = (dist_summary$bic== min(dist_summary$bic,na.rm=T)),  # lower = better
+    best_loglik = (dist_summary$loglik== max(dist_summary$loglik,na.rm=T)) # greater = better
   ) -> dist_summary
 
   if(detailed){
 
     dplyr::mutate(
       dist_summary,
-      best_iauc = (iAUC== max(iAUC,na.rm=T)), # greater = better
-      best_cin = (Cindex== max(Cindex,na.rm=T)), # greater = better
-      best_uno = (Unos.C== max(Unos.C,na.rm=T)), # greater = better
-      best_bri = (Brier.Median== min(Brier.Median, na.rm=T)), # lower = better
-      best_mae = (MAE== min(MAE,na.rm=T)), # lower = better
-      best_iae = (IAE== min(IAE,na.rm=T)), # lower = better
-      best_ise = (ISE== min(ISE,na.rm=T)) # lower = better
+      best_iauc = (dist_summary$iAUC== max(dist_summary$iAUC,na.rm=T)), # greater = better
+      best_cin = (dist_summary$Cindex== max(dist_summary$Cindex,na.rm=T)), # greater = better
+      best_uno = (dist_summary$Unos.C== max(dist_summary$Unos.C,na.rm=T)), # greater = better
+      best_bri = (dist_summary$Brier.Median== min(dist_summary$Brier.Median, na.rm=T)), # lower = better
+      best_mae = (dist_summary$MAE== min(dist_summary$MAE,na.rm=T)), # lower = better
+      best_iae = (dist_summary$IAE== min(dist_summary$IAE,na.rm=T)), # lower = better
+      best_ise = (dist_summary$ISE== min(dist_summary$ISE,na.rm=T)) # lower = better
     ) -> dist_summary
 
     if(ibs){
       dplyr::mutate(
         dist_summary,
-        best_ibs = (IBS== min(IBS,na.rm=T)), # lower = better
+        best_ibs = (dist_summary$IBS== min(dist_summary$IBS,na.rm=T)), # lower = better
       ) -> dist_summary
     }
   }
 
-  message(paste('Model with best AIC:', paste(dplyr::filter(dist_summary, best_aic==TRUE)$dist_name, collapse=', ')))
-  message(paste('Model with best BIC:', paste(dplyr::filter(dist_summary, best_bic==TRUE)$dist_name, collapse=', ')))
+  message(paste('Model with best AIC:', paste(dplyr::filter(dist_summary, dist_summary$best_aic==TRUE)$dist_name, collapse=', ')))
+  message(paste('Model with best BIC:', paste(dplyr::filter(dist_summary, dist_summary$best_bic==TRUE)$dist_name, collapse=', ')))
 
   if(detailed){
     if(length(dplyr::filter(dist_summary, best_iauc=TRUE)$dist_name) >5){
       message(paste('Many Models tied for best iAUC'))
     }else{
-      message(paste('Model with best iAUC:', paste(dplyr::filter(dist_summary, best_iauc==TRUE)$dist_name, collapse=', ')))
+      message(paste('Model with best iAUC:', paste(dplyr::filter(dist_summary, dist_summary$best_iauc==TRUE)$dist_name, collapse=', ')))
     }
 
     if(length(dplyr::filter(dist_summary, best_cin=TRUE)$dist_name) >5){
       message(paste('Many Models tied for best C-index'))
     }else{
-      message(paste('Model with best C-index:', paste(dplyr::filter(dist_summary, best_cin==TRUE)$dist_name, collapse=', ')))
+      message(paste('Model with best C-index:', paste(dplyr::filter(dist_summary, dist_summary$best_cin==TRUE)$dist_name, collapse=', ')))
     }
   }
 
 
   if(ibs){
-    message(paste('Model with best IBS:', paste(dplyr::filter(dist_summary, best_ibs==TRUE)$dist_name, collapse=', ')))
+    message(paste('Model with best IBS:', paste(dplyr::filter(dist_summary, dist_summary$best_ibs==TRUE)$dist_name, collapse=', ')))
   }else{
-     dplyr::select(dist_summary, -IBS) -> dist_summary
+     dplyr::select(dist_summary, -'IBS') -> dist_summary
   }
 
   for(q in colnames(dist_summary)){
@@ -447,12 +458,12 @@ fssg <- function(
   # output is a data-frame, one row for each attempted model
   if(detailed){
     if(ibs){
-       dplyr::arrange(dist_summary, aic, bic, dplyr::desc(IBS), iAUC, Cindex) -> out
+       dplyr::arrange(dist_summary, dist_summary$aic, dist_summary$bic, dplyr::desc(dist_summary$IBS), dist_summary$iAUC, dist_summary$Cindex) -> out
     }else{
-       dplyr::arrange(dist_summary,aic, bic, iAUC, Cindex) -> out
+       dplyr::arrange(dist_summary, dist_summary$aic, dist_summary$bic, dist_summary$iAUC, dist_summary$Cindex) -> out
     }
   }else{
-    dplyr::arrange(dist_summary, aic, bic, dplyr::desc(loglik)) -> out
+    dplyr::arrange(dist_summary, dist_summary$aic, dist_summary$bic, dplyr::desc(dist_summary$loglik)) -> out
   }
 
   # always print the summary information

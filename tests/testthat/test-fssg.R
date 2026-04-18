@@ -21,9 +21,8 @@ if(F){
   fssg(survival::Surv(time, status) ~ 1, data = survival::cancer, dump_models = T, warn = F) -> test_models2
 
   # specifying a model
-  fssg(survival::Surv(time, status) ~ 1, data = survival::aml, detailed = T, ibs=T, model='gamgomp') -> test1
-
-  fssg(survival::Surv(time, status) ~ 1, data = survival::aml, detailed = T, ibs=T, model=c('gamgomp','lindley'))
+  fssg(survival::Surv(time, status) ~ 1, data = survival::aml, detailed = T, ibs=T, model='gamma_gompertz') -> test1
+  fssg(survival::Surv(time, status) ~ 1, data = survival::aml, detailed = T, ibs=T, model=c('gamma_gompertz','lindley')) -> test2
 
   # single variable models
   fssg(survival::Surv(time, status) ~ x,   data = survival::aml,    dump_models = T, warn = F) -> test_models3
