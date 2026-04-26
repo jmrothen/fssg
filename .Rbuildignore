@@ -6,3 +6,5 @@
 ^.github
 ^cran-comments\.md$
 ^release.R$
+^\.positai$
+^\.claude$

@@ -120,7 +120,49 @@ bulk_check_inits(rpois(1000,100))
 The titular fssg function provides a one-line way to test multiple distributions for your data. Simply hand it your model formula and/or dataset, and watch it run. By default, the vast majority of the fssg and flexsurv distributions will be run on your data. Progress will be printed, and any models that failed will list the resulting error. The function always prints a summary of all models run, and by default returns a list with two items: the summary table as dataframe, and a list of each successful model.
 
 ```{r}
-fssg(survival::Surv(time, status) ~ 1, data = survival::cancer) -> output
+fssg(survival::Surv(time, status) ~ age + sex, data = survival::cancer) -> output
+```
+
+### Individual Models
+
+Each model created by fssg can be interacted with in the same way you would interact with flexsurv models. Here's a quick example of how to look into a specific model using the gumbel distribution.
+
+```{r}
+output$models$gumbel
+```
+
+Sex is significant, and a one unit increase in sex (1->2) is associated with considerably longer survival time.
+
+```{r}
+plot(
+  output$models$gumbel, 
+  newdata = data.frame(sex=c(1,2), age=70), col=c('blue','red'),
+  type='survival',
+  lwd=2
+)
+legend(
+  'topright',
+  legend = c('Sex1','Sex2'),
+  col =c('blue','red'),
+  lwd=2
+)
+```
+
+On the other hand, age is not significantly associated with survival time. 
+
+```{r}
+plot(
+  output$models$gumbel, 
+  newdata = data.frame(sex=c(1), age=c(65,80)), col=c('blue','red'),
+  type='survival',
+  lwd=2
+)
+legend(
+  'topright',
+  legend = c('Age 65','Age 80'),
+  col =c('blue','red'),
+  lwd=2
+)
 ```
 
 
@@ -133,10 +175,12 @@ fssg comes with a function to extract fit statistics. These statistics are calcu
 get_fit_stats(Surv(cancer$time, cancer$status), model = output$models$dagum, ibs = F)
 ```
 
-fssg always comes with a simple function for checking the distributions fit using QQplots. This function creates a simple QQplot of expected quantiles versus observed quantiles. These plots can be helpful for assessing the apropriateness of specific distributions. This function is unstable with flexsurv native distributions.
+fssg also comes with a simple function for checking the distributions fit using QQplots. This function creates a simple QQplot of expected quantiles versus observed quantiles. These plots can be helpful for assessing the appropriateness of specific distributions. This function is unstable with flexsurv native distributions, and more complicated models.
 
 ```{r}
-fssg_qqplot(output$models$exp_log)
+simple_model <- fssg(survival::Surv(time, status) ~ 1, data = survival::cancer)
 
-fssg_qqplot(output$models$gumbel)
+fssg_qqplot(simple_model$models$exp_log)
+
+fssg_qqplot(simple_model$models$gumbel)
 ```

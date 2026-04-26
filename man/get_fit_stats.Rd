@@ -20,8 +20,9 @@ List of fit statistics for the model.
 Collect fit statistics for a parametric survival model
 }
 \examples{
-require(survival)
-require(flexsurv)
+library(survival)
+library(flexsurv)
+
 flexsurvreg(Surv(time,status) ~age +sex, data=cancer, dist= 'weibull') -> model
 get_fit_stats(Surv(cancer$time, cancer$status), model = model, ibs = FALSE)
 

@@ -7,8 +7,9 @@
 #' @returns List of fit statistics for the model.
 #'
 #' @examples
-#' require(survival)
-#' require(flexsurv)
+#' library(survival)
+#' library(flexsurv)
+#'
 #' flexsurvreg(Surv(time,status) ~age +sex, data=cancer, dist= 'weibull') -> model
 #' get_fit_stats(Surv(cancer$time, cancer$status), model = model, ibs = FALSE)
 #'
@@ -129,8 +130,8 @@ get_fit_stats <- function(Surv_object, model, ibs=FALSE){
 #' @details Currently only works for simple models.
 #'
 #' @examples
-#' require(survival)
-#' require(flexsurv)
+#' library(survival)
+#' library(flexsurv)
 #'
 #' flexsurvreg(Surv(time,status) ~ 1, data=cancer, dist= get_fssg_dist('gamma_gompertz')) -> model
 #' fssg_qqplot(model)

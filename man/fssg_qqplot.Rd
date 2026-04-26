@@ -21,8 +21,8 @@ Quick QQ-plot for Flexsurv outputs
 Currently only works for simple models.
 }
 \examples{
-require(survival)
-require(flexsurv)
+library(survival)
+library(flexsurv)
 
 flexsurvreg(Surv(time,status) ~ 1, data=cancer, dist= get_fssg_dist('gamma_gompertz')) -> model
 fssg_qqplot(model)

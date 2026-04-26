@@ -7,3 +7,4 @@ R/scrapped/
 *.Rproj
 release.R
 inst/doc
+.positai
