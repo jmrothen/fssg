@@ -6,8 +6,8 @@
 #' @param skip Vector. If you want to skip any specific models, you can add their names here.
 #' By default, some of the repetitive or incredibly niche models are skipped.
 #'
-#' @param opt_method String. By default, 'BFGS' is used in flexsurvreg, however some distributions
-#' appreciate the more flexible 'Nelder-Mead' method. This is passed to the "optim" function as method = opt_method.
+#' @param opt_method String. Named of the preferred optimization method. Default for fssg is 'Nelder-Mead', with 'BFGS' being used as a back-up in case of errors.
+#' Can be any valid `optim` method, and the back-up method will always be 'BFGS', or 'Nelder-Mead' if 'BFGS' is the primary method provided.
 #'
 #' @param spline String or Vector of Strings. Include 'rp' or 'wy' for
 #' Royston-Parmar natural cubic spline, or Wang-Yan alternative natural cubic spline respectively.
@@ -18,7 +18,7 @@
 #' @param dump_models Logical. If TRUE, each successful model will be placed into a list and returned.
 #' @param detailed Logical. If True, calculates a number of additional fit statistics for each model.
 #' @param ibs Logical. If TRUE, calculate integrated brier score for each model.
-#' Please note that this greatly increases run time, and is not recommended for large data.
+#' Please note that this *greatly* increases run time, and is not recommended for large data.
 #'
 #' @param progress Logical. If TRUE, prints progress updates while the function runs.
 #' @param warn Logical. If TRUE, also prints any warnings that appear.
@@ -29,7 +29,7 @@
 #' fssg(
 #'   Surv(time, status)~1,
 #'   data=aml,
-#'   models=c('genf','exp','dagum','lomax','rayleigh','betaprime','fatigue','gamgomp'),
+#'   models=c('genf','exp','dagum','lomax','rayleigh','gamma_gompertz'),
 #'   spline = c('rp'),
 #'   max_knots=2,
 #'   warn = TRUE
@@ -41,7 +41,7 @@ fssg <- function(
     data=NA,
     models=NA,
     skip=c('default'),
-    opt_method = 'BFGS',
+    opt_method = 'Nelder-Mead',
     spline=NA,
     max_knots=1,
     dump_models=TRUE,
@@ -131,6 +131,9 @@ fssg <- function(
     dist_list <- dist_list[names(dist_list) %in% models]
   }
 
+  # Prioritizing the entered optim method
+  opt_method2 <- ifelse(opt_method!='BFGS', 'BFGS', 'Nelder-Mead')
+
   # iterate through each distribution, creating the model if possible and storing results
   iter <- 1
   for(i in dist_list){
@@ -176,17 +179,29 @@ fssg <- function(
         # if working with a flexsurv native distribution, we'll not specify the <dfns> argument
         if(!custom_indicator){
           if(data_req){
-            flexsurv::flexsurvreg(formula, dist=current_dist, data=data, method=opt_method) %>% suppressMessages() -> current_model
+            current_model <- tryCatch(
+              {suppressMessages(flexsurv::flexsurvreg(formula, dist=current_dist, data=data, method=opt_method))},
+              error=function(e){suppressMessages(flexsurv::flexsurvreg(formula, dist=current_dist, data=data, method=opt_method2))}
+            )
           }else{
-            flexsurv::flexsurvreg(formula, dist=current_dist, method=opt_method) %>% suppressMessages() -> current_model
+            current_model <- tryCatch(
+              {suppressMessages(flexsurv::flexsurvreg(formula, dist=current_dist, method=opt_method))},
+              error=function(e){suppressMessages(flexsurv::flexsurvreg(formula, dist=current_dist, method=opt_method2))}
+            )
           }
         }
         # for custom distributions, we specify the DFNs
         else{
           if(data_req){
-            flexsurv::flexsurvreg(formula, dist=i, data=data, dfns=list(d=i$d, p=i$p), method=opt_method) %>% suppressMessages() -> current_model
+            current_model <- tryCatch(
+              {suppressMessages(flexsurv::flexsurvreg(formula, dist=i, data=data, dfns=list(d=i$d, p=i$p), method=opt_method))},
+              error=function(e){suppressMessages(flexsurv::flexsurvreg(formula, dist=i, data=data, dfns=list(d=i$d, p=i$p), method=opt_method2))}
+            )
           }else{
-            flexsurv::flexsurvreg(formula, dist=i, dfns=list(d=i$d, p=i$p), method=opt_method) %>% suppressMessages() -> current_model
+            current_model <- tryCatch(
+              {suppressMessages(flexsurv::flexsurvreg(formula, dist=i, dfns=list(d=i$d, p=i$p), method=opt_method))},
+              error=function(e){suppressMessages(flexsurv::flexsurvreg(formula, dist=i, dfns=list(d=i$d, p=i$p), method=opt_method2))}
+            )
           }
         }
 
@@ -205,17 +220,15 @@ fssg <- function(
 
         if(detailed){
           if(data_req){
-            time_portion <-   dplyr::pull(data[c(as.character(formula[[2]][[2]]))])
-            status_portion <- dplyr::pull(data[c(as.character(formula[[2]][[3]]))])
-            Surv_object <- survival::Surv(time_portion, status_portion)
+            Surv_object <- model.frame(formula, data) %>% model.response()
           }else{
-            Surv_object <- survival::Surv(formula[[2]][[2]], formula[[2]][[3]])
+            Surv_object <- model.frame(formula) %>% model.response()
           }
-          fitstats <- get_fit_stats(Surv_object, model = current_model, ibs)
+          fitstats <- get_fit_stats(model = current_model, ibs)
 
           current_iAUC   <- fitstats$iAUC.Full
           current_Cindex <- fitstats$C.Index
-          current_Unos.C <- fitstats$C.Index.Uno
+          current_Unos.C <- fitstats$Uno.C.Index
           current_brier  <- fitstats$Brier.Median
           current_mae    <- fitstats$MAE
           current_iae    <- fitstats$IAE.Full
@@ -312,9 +325,15 @@ fssg <- function(
 
           # cycle through our spline options
           if(data_req){
-            flexsurv::flexsurvspline(formula, data=data, k=kvec[s], scale=svec[s], spline=mvec[s], method=opt_method) %>% suppressMessages() -> current_model
+            current_model <- tryCatch(
+              {suppressMessages(flexsurv::flexsurvspline(formula, data=data, k=kvec[s], scale=svec[s], spline=mvec[s], method=opt_method))},
+              error=function(e){suppressMessages(flexsurv::flexsurvspline(formula, data=data, k=kvec[s], scale=svec[s], spline=mvec[s], method=opt_method2))}
+            )
           }else{
-            flexsurv::flexsurvspline(formula, k=kvec[s], scale=svec[s], spline=mvec[s], method=opt_method) %>% suppressMessages() -> current_model
+            current_model <- tryCatch(
+              {suppressMessages(flexsurv::flexsurvspline(formula, k=kvec[s], scale=svec[s], spline=mvec[s], method=opt_method))},
+              error=function(e){suppressMessages(flexsurv::flexsurvspline(formula, k=kvec[s], scale=svec[s], spline=mvec[s], method=opt_method2))}
+            )
           }
 
           # if model succeeds, collect information
@@ -332,17 +351,15 @@ fssg <- function(
           if(detailed){
             ### should add the case to pass Surv functions of the form Surv(time1, time2, status), which would use length(formula[[2]])
             if(data_req){
-              time_portion <-   dplyr::pull(data[c(as.character(formula[[2]][[2]]))])
-              status_portion <- dplyr::pull(data[c(as.character(formula[[2]][[3]]))])
-              Surv_object <- survival::Surv(time_portion, status_portion)
+              Surv_object <- model.frame(formula, data) %>% model.response()
             }else{
-              Surv_object <- survival::Surv(formula[[2]][[2]], formula[[2]][[3]])
+              Surv_object <- model.frame(formula) %>% model.response()
             }
-            fitstats <- get_fit_stats(Surv_object, model = current_model, ibs)
+            fitstats <- get_fit_stats(model = current_model, ibs)
 
             current_iAUC <- fitstats$iAUC.Full
             current_Cindex <- fitstats$C.Index
-            current_Unos.C <- fitstats$C.Index.Uno
+            current_Unos.C <- fitstats$Uno.C.Index
             current_brier <- fitstats$Brier.Median
             current_mae <- fitstats$MAE
             current_iae <- fitstats$IAE.Full
@@ -443,7 +460,7 @@ fssg <- function(
   if(ibs){
     message(paste('Model with best IBS:', paste(dplyr::filter(dist_summary, dist_summary$best_ibs==TRUE)$dist_name, collapse=', ')))
   }else{
-     dplyr::select(dist_summary, -'IBS') -> dist_summary
+     if(detailed){dplyr::select(dist_summary, -'IBS') -> dist_summary}
   }
 
   for(q in colnames(dist_summary)){
