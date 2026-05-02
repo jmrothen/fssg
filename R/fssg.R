@@ -220,9 +220,9 @@ fssg <- function(
 
         if(detailed){
           if(data_req){
-            Surv_object <- stats::model.frame(formula, data) %>% model.response()
+            Surv_object <- stats::model.frame(formula, data) %>% stats::model.response()
           }else{
-            Surv_object <- stats::model.frame(formula) %>% model.response()
+            Surv_object <- stats::model.frame(formula) %>% stats::model.response()
           }
           fitstats <- get_fit_stats(model = current_model, ibs)
 
@@ -351,9 +351,9 @@ fssg <- function(
           if(detailed){
             ### should add the case to pass Surv functions of the form Surv(time1, time2, status), which would use length(formula[[2]])
             if(data_req){
-              Surv_object <- model.frame(formula, data) %>% model.response()
+              Surv_object <- stats::model.frame(formula, data) %>% stats::model.response()
             }else{
-              Surv_object <- model.frame(formula) %>% model.response()
+              Surv_object <- stats::model.frame(formula) %>% stats::model.response()
             }
             fitstats <- get_fit_stats(model = current_model, ibs)
 
