@@ -513,7 +513,7 @@ fssg_dist_list <- function(){
   )
 
   fssg_hypertab_b <- list(
-    name='hypertab',
+    name='hypertab_b',
     pars= c('a','b'),
     location= 'b',
     transforms= c(log,log),
@@ -524,7 +524,7 @@ fssg_dist_list <- function(){
     q = quantilify(phypertab),
     h = hazardify(dhypertab, phypertab),
     H = cumhazardify(phypertab),
-    fullname='hypertabastic'
+    fullname='hypertabastic_b'
   )
 
   ### Inverse Chi-squared

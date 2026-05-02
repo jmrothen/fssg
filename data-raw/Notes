@@ -1,32 +1,16 @@
-Developer Notes
+TBD:
 
-Use these things for package development
+A table of all included distributions, their names, their source, references for formulas, and if they're PH/AFT. Can be given in the roxygen for dist_list.
 
-devtools: check, build, document, load_all
-    Maybes: reload, test (relies on testthat)
+Considerations for ancillary parameters.
 
-Rcpp: compileAttributes    (basically imports the cpp functions)
-  -> PLEASE REMEMBER THIS
+Full fleshed out testing suite.
 
+QQplot works for more complicated models (S ~ a + b).
 
-usethis: use_data, use_data_raw
+Update vignette to use the sample dataset `pseudo`.
 
+Make vignette actually good. (Includes examples of every function.)
 
+Standardize the naming system of included distributions.
 
-Current items to add:
-- General improvements to the GOF testing
-  - PIT method
-    - involves passing your times into p<dist> with the relevant fitted parameters, and then passing them into a histogram
-    - if fit is good, then hist should look flatly uniform
-    - can also pass into a ks.test with y='punif', or even goftest::ad.test
-  - ks.test and ad.test more generally can be used to test goodness of a distribution
-  - QQ plots
-    - requires q-function of dist, and then you qqplot(q<dist>(ppoints(nrow(data)), parameters), sort(times)), and use abline(0,1) for ref?
-  - CoxSnell residuals should be Exp(1)
-- Consider adding methods for ancillary parameters (can be passed to flexsurvreg)
-  - would likely require either new distribution objects or additional attributes on the object?
-
-
-
-######## CYRRENT AS OF 4/12/26
-# rewrite potions of fssg to fix the 'no visible global variables' portions

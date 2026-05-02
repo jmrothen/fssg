@@ -220,9 +220,9 @@ fssg <- function(
 
         if(detailed){
           if(data_req){
-            Surv_object <- model.frame(formula, data) %>% model.response()
+            Surv_object <- stats::model.frame(formula, data) %>% model.response()
           }else{
-            Surv_object <- model.frame(formula) %>% model.response()
+            Surv_object <- stats::model.frame(formula) %>% model.response()
           }
           fitstats <- get_fit_stats(model = current_model, ibs)
 

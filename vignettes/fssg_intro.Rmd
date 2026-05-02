@@ -40,10 +40,6 @@ What does our custom distribution need?
 5. Initial values. The optimization process requires a starting point. This is often the trickiest part of specifying a distribution, as poor initial values will cause the optimization to fail. To avoid these problems, it's recommend to have your inits supplied as function which is dependent on the survival times. This allows the initial values to be dynamically determined by the actual shape of your data, and lowers the chance of bad initial values. 
 6. Distribution functions. flexsurv actually allows to be specified in one of two primary ways: with a density and distribution function ('d', 'p'), or with a Hazard and Cumulative Hazard function ('h','H'). It also helps to include the q function when possible. This package also includes some helper functions to construct these distribution functions based off a 'd' and 'p' function (See survivify).
 
-Let's see an example!
-
-
-
 This package contains some custom distribution functions for the gamma-gompertz distribution (e.g. dgamgomp, pgamgomp, etc.). These distributions functions are specified in a similar fashion to the native R distribution functions like pnorm, dnorm, qnorm etc.
 
 ```{r}
@@ -102,8 +98,11 @@ fssg(
 fssg includes a few diagnostic functions for checking whether the init function for a distribution will fail or not based on your data. This simply checks if the initial distribution parameters will allow the distribution function to return valid values for each observed time. 
 
 ```{r}
+data('pseudo',package='fssg')
+head(pseudo) # sample data set provided in the package
+
 check_inits(
-  times = rpois(1000, 100),
+  times = pseudo$time,
   get_fssg_dist('gumbel')
 )
 ```
@@ -111,7 +110,7 @@ check_inits(
 In the nature of this package, you can also bulk check every distribution on your data! This will perform the simple check_inits function for each distribution packaged within fssg. Please note that this is rather unstable with the flexsurv-native distributions. 
 
 ```{r}
-bulk_check_inits(rpois(1000,100))
+bulk_check_inits(pseudo$time)
 ```
 
 
@@ -123,12 +122,28 @@ The titular fssg function provides a one-line way to test multiple distributions
 fssg(survival::Surv(time, status) ~ age + sex, data = survival::cancer) -> output
 ```
 
+In many cases, the user may only want to try a subset of the available models. This can be done by giving fssg only the models you want.
+
+```{r}
+fssg(
+  survival::Surv(time, !censor) ~ gender + region + surgery + drug + comorb_cat, 
+  data = pseudo, 
+  models = c('gamma_gompertz','gompertz','gumbel','gumbelT2','hypertab_a', 'hypertab_b'),
+  detailed = F
+) -> output
+```
+
+
 ### Individual Models
 
 Each model created by fssg can be interacted with in the same way you would interact with flexsurv models. Here's a quick example of how to look into a specific model using the gumbel distribution.
 
 ```{r}
-output$models$gumbel
+simple_model <- fssg(
+  formula = Surv(time, status) ~ age + sex, 
+  data=survival::cancer, 
+  model= c('gumbel','dagum','exp_log')
+) -> output
 ```
 
 Sex is significant, and a one unit increase in sex (1->2) is associated with considerably longer survival time.
@@ -172,7 +187,7 @@ fssg comes with a function to extract fit statistics. These statistics are calcu
 
 
 ```{r}
-get_fit_stats(Surv(cancer$time, cancer$status), model = output$models$dagum, ibs = F)
+get_fit_stats(model = output$models$dagum, ibs = F)
 ```
 
 fssg also comes with a simple function for checking the distributions fit using QQplots. This function creates a simple QQplot of expected quantiles versus observed quantiles. These plots can be helpful for assessing the appropriateness of specific distributions. This function is unstable with flexsurv native distributions, and more complicated models.

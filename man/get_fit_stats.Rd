@@ -4,17 +4,18 @@
 \alias{get_fit_stats}
 \title{Collect fit statistics for a parametric survival model}
 \usage{
-get_fit_stats(Surv_object, model, ibs = FALSE)
+get_fit_stats(model, ibs = FALSE)
 }
 \arguments{
-\item{Surv_object}{Survival Object of form \code{survival::Surv}. Should be from the left side of the survival model function.}
-
 \item{model}{Model object. Currently formatted to work with flexsurvreg objects, and may work for other types of models.}
 
-\item{ibs}{Logical. If True, calculates the integrated Brier Score, which is a helpful fit statistic but is considerably slower to calculate than all other statistics.}
+\item{ibs}{Logical. If True, calculates the integrated Brier Score, which is a helpful fit statistic but is \emph{much} slower to calculate than all other statistics.}
 }
 \value{
 List of fit statistics for the model.
+
+Please note that for concordance and AUC statistics, the ranks are arbitrarily sorted in one direction regardless of PH/AFT specification of the model.
+To account for this, the statistics returned are the max of (statistic, 1-statistic), which should always provide the correct value regardless of rank sort order.
 }
 \description{
 Collect fit statistics for a parametric survival model
@@ -23,7 +24,7 @@ Collect fit statistics for a parametric survival model
 library(survival)
 library(flexsurv)
 
-flexsurvreg(Surv(time,status) ~age +sex, data=cancer, dist= 'weibull') -> model
-get_fit_stats(Surv(cancer$time, cancer$status), model = model, ibs = FALSE)
+flexsurvreg(Surv(time,status) ~ age +sex, data=cancer, dist= 'weibull') -> model
+get_fit_stats(model = model, ibs = FALSE)
 
 }

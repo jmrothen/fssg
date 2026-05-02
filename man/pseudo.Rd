@@ -5,7 +5,6 @@
 \alias{pseudo}
 \title{Pseudo: Simulated data for experimentation}
 \format{
-\code{Pseudo}
 \describe{
 \item{time}{Time until event.}
 \item{censor}{Indicator for censorship. If TRUE, the patient was censored at corresponding time.}
@@ -13,9 +12,7 @@
 }
 }
 \source{
-\if{html}{\out{
-<authors>
-}}
+fssg
 }
 \usage{
 pseudo

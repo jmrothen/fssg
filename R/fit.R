@@ -88,8 +88,8 @@ get_fit_stats <- function(model, ibs=FALSE){
   iauc6      <- tryCatch(survAUC::AUC.uno(Surv_object, Surv_object, lpnew = preds, times = c(avg_time))$iauc, error=function(e){NA}) # AUC at mean
 
   ### metrics
-  c_index    <- tryCatch(SurvMetrics::Cindex(Surv_object, predicted = preds), error=function(e){NA}) %>% as.numeric()
-  mae        <- tryCatch(SurvMetrics::MAE(Surv_object, pre_time= preds), error=function(e){NA}) %>% as.numeric()
+  c_index    <- tryCatch(SurvMetrics::Cindex(Surv_object, predicted = as.vector(unlist(stats::predict(model)))), error=function(e){NA}) %>% as.numeric()
+  mae        <- tryCatch(SurvMetrics::MAE(Surv_object, pre_time= as.vector(unlist(stats::predict(model)))), error=function(e){NA}) %>% as.numeric()
   i_stats    <- tryCatch(SurvMetrics::IAEISE(Surv_object, sp_matrix = survprob$sp_matrix,  IRange=survprob$IRange), error=function(e){NA}) %>% as.numeric()  ### vastly underestimates I stats?
   i_stats2   <- tryCatch(SurvMetrics::IAEISE(Surv_object, sp_matrix = survprob2$sp_matrix, IRange=survprob2$IRange), error=function(e){NA})%>% as.numeric()
   i_stats3   <- tryCatch(SurvMetrics::IAEISE(Surv_object, sp_matrix = survprob3$sp_matrix, IRange=survprob3$IRange), error=function(e){NA})%>% as.numeric()
@@ -130,8 +130,8 @@ get_fit_stats <- function(model, ibs=FALSE){
     out <- c(
       out,
       'IBS'                 = ibs1,
-      #'IBS.IQR'             = ibs2,
-      #'IBS.Q10.Q90'         = ibs3,
+      # 'IBS.IQR'             = ibs2,
+      # 'IBS.Q10.Q90'         = ibs3,
       'IBS.Full'            = ibs4
     )
   }

@@ -8,5 +8,5 @@
 #'  \item{censor}{Indicator for censorship. If TRUE, the patient was censored at corresponding time.}
 #'  \item{gender, age, region, surgery, drug, comorb, comorb_cat}{Arbitrary covariates.}
 #' }
-#' @source <authors>
+#' @source fssg
 "pseudo"

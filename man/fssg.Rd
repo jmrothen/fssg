@@ -9,7 +9,7 @@ fssg(
   data = NA,
   models = NA,
   skip = c("default"),
-  opt_method = "BFGS",
+  opt_method = "Nelder-Mead",
   spline = NA,
   max_knots = 1,
   dump_models = TRUE,
@@ -29,8 +29,8 @@ fssg(
 \item{skip}{Vector. If you want to skip any specific models, you can add their names here.
 By default, some of the repetitive or incredibly niche models are skipped.}
 
-\item{opt_method}{String. By default, 'BFGS' is used in flexsurvreg, however some distributions
-appreciate the more flexible 'Nelder-Mead' method. This is passed to the "optim" function as method = opt_method.}
+\item{opt_method}{String. Named of the preferred optimization method. Default for fssg is 'Nelder-Mead', with 'BFGS' being used as a back-up in case of errors.
+Can be any valid \code{optim} method, and the back-up method will always be 'BFGS', or 'Nelder-Mead' if 'BFGS' is the primary method provided.}
 
 \item{spline}{String or Vector of Strings. Include 'rp' or 'wy' for
 Royston-Parmar natural cubic spline, or Wang-Yan alternative natural cubic spline respectively.
@@ -44,7 +44,7 @@ If set to NA, then the spline step will be skipped.}
 \item{detailed}{Logical. If True, calculates a number of additional fit statistics for each model.}
 
 \item{ibs}{Logical. If TRUE, calculate integrated brier score for each model.
-Please note that this greatly increases run time, and is not recommended for large data.}
+Please note that this \emph{greatly} increases run time, and is not recommended for large data.}
 
 \item{progress}{Logical. If TRUE, prints progress updates while the function runs.}
 
@@ -61,7 +61,7 @@ library(survival)
 fssg(
   Surv(time, status)~1,
   data=aml,
-  models=c('genf','exp','dagum','lomax','rayleigh','betaprime','fatigue','gamgomp'),
+  models=c('genf','exp','dagum','lomax','rayleigh','gamma_gompertz'),
   spline = c('rp'),
   max_knots=2,
   warn = TRUE
