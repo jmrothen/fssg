@@ -15,6 +15,9 @@
 #' flexsurvreg(Surv(time,status) ~ age +sex, data=cancer, dist= 'weibull') -> model
 #' get_fit_stats(model = model, ibs = FALSE)
 #'
+#' @details
+#' Table of fit statistics and their source. Please see the vignette \code{vignette("Fit_Statistics")} for more details.
+#'
 #' @export
 get_fit_stats <- function(model, ibs=FALSE){
   # Rely on these three packages for statistics

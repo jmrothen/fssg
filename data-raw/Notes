@@ -14,3 +14,6 @@ Make vignette actually good. (Includes examples of every function.)
 
 Standardize the naming system of included distributions.
 
+
+
+knitr::kable(read.csv('data-raw/fit_table.csv'), format='pipe')

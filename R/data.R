@@ -5,7 +5,7 @@
 #' @format
 #' \describe{
 #'  \item{time}{Time until event.}
-#'  \item{censor}{Indicator for censorship. If TRUE, the patient was censored at corresponding time.}
+#'  \item{death}{Indicator for death. If TRUE, the patient died at corresponding time.}
 #'  \item{gender, age, region, surgery, drug, comorb, comorb_cat}{Arbitrary covariates.}
 #' }
 #' @source fssg

@@ -20,6 +20,9 @@ To account for this, the statistics returned are the max of (statistic, 1-statis
 \description{
 Collect fit statistics for a parametric survival model
 }
+\details{
+Table of fit statistics and their source. Please see the vignette \code{vignette("Fit_Statistics")} for more details.
+}
 \examples{
 library(survival)
 library(flexsurv)

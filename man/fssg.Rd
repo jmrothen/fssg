@@ -13,7 +13,7 @@ fssg(
   spline = NA,
   max_knots = 1,
   dump_models = TRUE,
-  detailed = TRUE,
+  detailed = FALSE,
   ibs = FALSE,
   progress = TRUE,
   warn = FALSE
