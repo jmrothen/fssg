@@ -26,3 +26,6 @@ dgamgomp(1,1,1,1)
 
 
 }
+\references{
+\url{https://en.wikipedia.org/wiki/Gamma/Gompertz_distribution}
+}

@@ -1,0 +1,5 @@
+Name: Quick Pipe
+Description: Prints a pipe and enters a new line
+Binding: quick_pipe
+Interactive: false
+

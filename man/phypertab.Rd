@@ -27,3 +27,6 @@ Provides cumulative distribution function for Hypertabastic distribution.
 phypertab(1,1,1)
 
 }
+\references{
+\url{https://en.wikipedia.org/wiki/Hypertabastic_survival_models}
+}

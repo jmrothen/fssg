@@ -27,3 +27,6 @@ Provides cumulative distribution function for Log Cauchy distribution.
 plogcauchy(1,1,1)
 
 }
+\references{
+\url{https://en.wikipedia.org/wiki/Log-Cauchy_distribution}
+}

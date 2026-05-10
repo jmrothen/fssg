@@ -41,7 +41,7 @@ fssg <- function(
     data=NA,
     models=NA,
     skip=c('default'),
-    opt_method = 'Nelder-Mead',
+    opt_method = 'BFGS',
     spline=NA,
     max_knots=1,
     dump_models=TRUE,
@@ -56,11 +56,6 @@ fssg <- function(
       # 'weibullPH',                  # identical to other weibull
       # 'genf.orig',                  # running genf instead
       # 'gengamma.orig',              # running gengamma instead
-      # 'chisq',                      # very rarely useful
-      # 'non_central_chi_squared',    # very rarely useful
-      # 'levy' ,                       # VGAM has functions, but theyre of an odd structure and not documented
-      'erlang',                     # erlang is temporarily removed anyways
-      'truncpareto',                # have yet to get this to work
       'exponential',                # flexsurv's distribution list has 'exp','exponential', which are identical in practice. So we toss this one
       'lognormal'                   # flexsurv's distribution list has 'lognormal','loggaussian', which are identical in practice. So we toss this one
     )
@@ -144,7 +139,7 @@ fssg <- function(
     current_source <- ifelse(custom_indicator, 'fssg','flexsurv')
 
     # skip distribution if in our skip list. This is done inside the loop to allow for broader matching of model names
-    if(i$name %in% skip | dplyr::coalesce(i$fullname, i$name) %in% skip | names(dist_list)[iter] %in% skip){
+    if(i$name %in% skip | any(dplyr::coalesce(i$fullname, i$name) %in% skip) | current_dist %in% skip){
       iter <- iter+1
       next
     }

@@ -25,3 +25,8 @@ Provides the probability density function at point x for an erlang distribution 
 derlang(1, 1, 1)
 
 }
+\references{
+\url{https://quarto.wessa.net/erlang.html}
+
+\url{https://en.wikipedia.org/wiki/Erlang_distribution}
+}

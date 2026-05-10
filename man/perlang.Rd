@@ -27,3 +27,8 @@ Provides the cumulative density function at point q for an erlang distribution o
 perlang(1, 1, 1)
 
 }
+\references{
+\url{https://quarto.wessa.net/erlang.html}
+
+\url{https://en.wikipedia.org/wiki/Erlang_distribution}
+}

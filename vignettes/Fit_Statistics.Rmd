@@ -1,5 +1,5 @@
 ---
-title: "Fit Statistics"
+title: "Fit_Statistics"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Fit_Statistics}

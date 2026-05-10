@@ -25,3 +25,6 @@ Provides probability distribution function for Hypertabastic distribution.
 dhypertab(1,1,1)
 
 }
+\references{
+\url{https://en.wikipedia.org/wiki/Hypertabastic_survival_models}
+}

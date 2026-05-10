@@ -8,6 +8,11 @@
 #' @param log logical: if TRUE, log of probability is returned.
 #' @returns The probability of the Erlang probability distribution at x with parameters K and lambda.
 #'
+#' @references
+#' <https://quarto.wessa.net/erlang.html>
+#'
+#' <https://en.wikipedia.org/wiki/Erlang_distribution>
+#'
 #' @examples
 #' derlang(1, 1, 1)
 #'
@@ -29,6 +34,11 @@ derlang <- function(x, k, l, log = FALSE) {
 #' @param log.p logical: if TRUE, log of probability is returned.
 #' @returns The cumulative probability of the Erlang probability distribution at based on quantile q with parameters K and lambda.
 #'
+#' @references
+#' <https://quarto.wessa.net/erlang.html>
+#'
+#' <https://en.wikipedia.org/wiki/Erlang_distribution>
+#'
 #' @examples
 #' perlang(1, 1, 1)
 #'
@@ -48,6 +58,8 @@ perlang <- function(q, k, l, lower.tail = TRUE, log.p = FALSE) {
 #' @param sigma,beta shape parameters, must be greater than 0.
 #' @param log logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles x.
+#'
+#' @references <https://en.wikipedia.org/wiki/Gamma/Gompertz_distribution>
 #'
 #' @examples
 #' dgamgomp(1,1,1,1)
@@ -71,6 +83,8 @@ dgamgomp <- function(x, b, sigma, beta, log = FALSE) {
 #' @param log.p logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles q.
 #'
+#' @references <https://en.wikipedia.org/wiki/Gamma/Gompertz_distribution>
+#'
 #' @examples
 #' pgamgomp(1,1,1,1)
 #'
@@ -91,6 +105,8 @@ pgamgomp <- function(q, b, sigma, beta, lower.tail = TRUE, log.p = FALSE) {
 #' @param sigma scale parameter, must be greater than 0.
 #' @param log logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles x.
+#'
+#' @references <https://en.wikipedia.org/wiki/Log-Cauchy_distribution>
 #'
 #' @examples
 #' dlogcauchy(1,1,1)
@@ -113,6 +129,8 @@ dlogcauchy <- function(x, mu, sigma, log = FALSE) {
 #' @param log.p logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles q.
 #'
+#' @references <https://en.wikipedia.org/wiki/Log-Cauchy_distribution>
+#'
 #' @examples
 #' plogcauchy(1,1,1)
 #'
@@ -132,6 +150,8 @@ plogcauchy <- function(q, mu, sigma, lower.tail = TRUE, log.p = FALSE) {
 #' @param b beta parameter. Must be greater than 0.
 #' @param log logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles x.
+#'
+#' @references <https://en.wikipedia.org/wiki/Hypertabastic_survival_models>
 #'
 #' @examples
 #' dhypertab(1,1,1)
@@ -154,6 +174,8 @@ dhypertab <- function(x, a, b, log = FALSE) {
 #' @param log.p logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles q.
 #'
+#' @references <https://en.wikipedia.org/wiki/Hypertabastic_survival_models>
+#'
 #' @examples
 #' phypertab(1,1,1)
 #'
@@ -172,6 +194,14 @@ phypertab <- function(q, a, b, lower.tail = TRUE, log.p = FALSE) {
 #' @param theta paramater, must be greater than 0.
 #' @param log logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles x.
+#' @references
+#' Sharma, V. K., Singh, S. K., Singh, U., & Agiwal, V. (2015).
+#' The inverse Lindley distribution: a stress-strength reliability model with application to head and neck cancer data.
+#' Journal of Industrial and Production Engineering, 32(3), 162-173. <https://doi.org/10.1080/21681015.2015.1025901>
+#'
+#' Asgharzadeh, Akbar & Alizadeh Sangtarashani, Mojtaba. (2023).
+#' Inverse Lindley distribution: different methods for estimating their PDF and CDF.
+#' Journal of Statistical Computation and Simulation. 94. 1-20. <https://doi.org/10.1080/00949655.2023.2265011>.
 #'
 #' @examples
 #' dinvlind(1,1)
@@ -192,6 +222,15 @@ dinvlind <- function(x, theta, log = FALSE) {
 #' @param lower.tail logical: if TRUE, returns densities from 0 to q, otherwise q to 1.
 #' @param log.p logical: if TRUE, log of probability is returned.
 #' @returns Probabilities for quantiles q.
+#'
+#' @references
+#' Sharma, V. K., Singh, S. K., Singh, U., & Agiwal, V. (2015).
+#' The inverse Lindley distribution: a stress-strength reliability model with application to head and neck cancer data.
+#' Journal of Industrial and Production Engineering, 32(3), 162-173. <https://doi.org/10.1080/21681015.2015.1025901>
+#'
+#' Asgharzadeh, Akbar & Alizadeh Sangtarashani, Mojtaba. (2023).
+#' Inverse Lindley distribution: different methods for estimating their PDF and CDF.
+#' Journal of Statistical Computation and Simulation. 94. 1-20. <https://doi.org/10.1080/00949655.2023.2265011>.
 #'
 #' @examples
 #' pinvlind(1,1)

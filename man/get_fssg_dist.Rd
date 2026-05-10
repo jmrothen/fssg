@@ -17,7 +17,7 @@ Function to return a specific distribution object.
 }
 \examples{
 get_fssg_dist('weibull')
-get_fssg_dist('f')
+get_fssg_dist('frechet')
 get_fssg_dist('gamma_gompertz')
 
 }

@@ -9,7 +9,7 @@ fssg(
   data = NA,
   models = NA,
   skip = c("default"),
-  opt_method = "Nelder-Mead",
+  opt_method = "BFGS",
   spline = NA,
   max_knots = 1,
   dump_models = TRUE,
