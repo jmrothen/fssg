@@ -1,18 +1,22 @@
 TBD:
 
-A table of all included distributions, their names, their source, references for formulas, and if they're PH/AFT. Can be given in the roxygen for dist_list.
-
 Considerations for ancillary parameters.
 
 Full fleshed out testing suite.
 
 QQplot works for more complicated models (S ~ a + b).
 
-Update vignette to use the sample dataset `pseudo`.
-
-Make vignette actually good. (Includes examples of every function.)
-
 Standardize the naming system of included distributions.
+
+Flesh out 'fullnames'
+
+Add string parsing to get_fssg_dist
+
+Fix function defaults in fssg_dist.
+  - if q, h, or H not included, estimate them using p/d
+
+Add check in fssg; if d/p not specified, attempt to use h, H instead?
+
 
 
 

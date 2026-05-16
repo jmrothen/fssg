@@ -13,6 +13,8 @@
 #' Royston-Parmar natural cubic spline, or Wang-Yan alternative natural cubic spline respectively.
 #' The Wang-Yan version requires the package 'splines2ns'.
 #' If set to NA, then the spline step will be skipped.
+#' fssg runs spline models using all three available scale options in `flexsurvspline`, for 'hazard', 'odds' and 'normal.
+#'
 #'
 #' @param max_knots Integer. Specifies the maximum number of knots to be considered in spline models.
 #' @param dump_models Logical. If TRUE, each successful model will be placed into a list and returned.
@@ -23,6 +25,10 @@
 #' @param progress Logical. If TRUE, prints progress updates while the function runs.
 #' @param warn Logical. If TRUE, also prints any warnings that appear.
 #' @returns List containing a summary of the models generated. If dump_models is True, also returns a list of generated models.
+#'
+#' @details
+#' Please see \code{vignette("fssg")} for a more in-depth example of the function.
+#'
 #'
 #' @examples
 #' library(survival)

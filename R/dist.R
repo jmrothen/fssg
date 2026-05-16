@@ -45,7 +45,7 @@
 #'
 #' @details
 #' Important note: flexsurv by default only varies one model parameter (what is specified in the distributions as `location`)
-#' We can make more than one parameter vary using the `anc` parameter in flexsurvreg.
+#' We can make more than one parameter vary using the `anc` parameter in `flexsurvreg`.
 #' Example: `anc` = list(shape1 = ~ var1 + var2, shape2 = ~ var3).
 #'
 #' @references flexsurv vignette by Christopher H. Jackson <https://cran.r-project.org/web/packages/flexsurv/vignettes/flexsurv.pdf>
