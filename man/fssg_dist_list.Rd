@@ -17,6 +17,6 @@ For details on all distributions, please see \code{vignette("Distributions")}.
 }
 \examples{
 
-fdl <- fssg_dist_list
+fdl <- fssg_dist_list()
 
 }

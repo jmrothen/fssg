@@ -18,6 +18,9 @@ fssg
 pseudo
 }
 \description{
-Data is entirely fabricated. The source code for creating this data set can be found in the data-raw folder.
+This data is entirely fabricated. The source code for creating this data set can be found in the data-raw folder of the github repository.
+}
+\examples{
+head(pseudo)
 }
 \keyword{datasets}

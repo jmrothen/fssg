@@ -7,7 +7,7 @@
 get_fit_stats(model, ibs = FALSE)
 }
 \arguments{
-\item{model}{Model object. Currently formatted to work with flexsurvreg objects, and may work for other types of models.}
+\item{model}{Model object. Currently formatted to work with \code{flexsurvreg} objects, and may work for other types of models.}
 
 \item{ibs}{Logical. If True, calculates the integrated Brier Score, which is a helpful fit statistic but is \emph{much} slower to calculate than all other statistics.}
 }
@@ -21,7 +21,7 @@ To account for this, the statistics returned are the max of (statistic, 1-statis
 Collect fit statistics for a parametric survival model
 }
 \details{
-Table of fit statistics and their source. Please see the vignette \code{vignette("Fit_Statistics")} for more details.
+For a table of fit statistics and their sources, please see the vignette \code{vignette("Fit_Statistics")} for more details.
 }
 \examples{
 library(survival)

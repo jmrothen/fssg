@@ -1,8 +1,10 @@
 #' fssg: Flexsurv "Shotgun".
 #'
+#' A simple tool for the bulk creation and testing of parametric survival models.
+#'
 #' @param formula Formula. Should be a survival formula, with a Surv object on the left hand side.
 #' @param data If your formula needs a dataset, provide that here.
-#' @param models Vector of strings. If you only want to run specific models, specify them here by their list name in fssg_dist_list.
+#' @param models Vector of strings. If you only want to run specific models, specify them here by their list name in `fssg_dist_list`.
 #' @param skip Vector. If you want to skip any specific models, you can add their names here.
 #' By default, some of the repetitive or incredibly niche models are skipped.
 #'
@@ -11,9 +13,9 @@
 #'
 #' @param spline String or Vector of Strings. Include 'rp' or 'wy' for
 #' Royston-Parmar natural cubic spline, or Wang-Yan alternative natural cubic spline respectively.
-#' The Wang-Yan version requires the package 'splines2ns'.
+#' The Wang-Yan version requires the package `splines2ns`.
 #' If set to NA, then the spline step will be skipped.
-#' fssg runs spline models using all three available scale options in `flexsurvspline`, for 'hazard', 'odds' and 'normal.
+#' `fssg` runs spline models using all three available scale options in `flexsurvspline`, for 'hazard', 'odds' and 'normal.
 #'
 #'
 #' @param max_knots Integer. Specifies the maximum number of knots to be considered in spline models.
@@ -276,7 +278,7 @@ fssg <- function(
   if('rp' %in% spline  | 'wy' %in% spline){
 
     # RP works on it's own, but if we also want to try the 'natural cubic spline', we need splines2
-    # if('wy' %in% spline){requireNamespace('splines2')}
+    if('wy' %in% spline){requireNamespace('splines2')}
 
     # optional progress tracking chunk
     if(progress){

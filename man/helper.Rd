@@ -6,7 +6,7 @@
 \alias{hazardify}
 \alias{cumhazardify}
 \alias{quantilify}
-\title{fssg Helper Functions}
+\title{\code{fssg} Helper Functions}
 \usage{
 survivify(p_function)
 
@@ -17,32 +17,30 @@ cumhazardify(p_function)
 quantilify(p_function)
 }
 \arguments{
-\item{p_function}{Distribution function. E.g. pnorm.}
+\item{p_function}{Distribution function. E.g. \code{pnorm}.}
 
-\item{d_function}{Density function. E.g. dnorm.}
+\item{d_function}{Density function. E.g. \code{dnorm}.}
 }
 \value{
 A new function of the desired type with the same parameters as the input functions.
 
-survivify returns the function S(t).
+survivify returns the survival function S(t).
 
-hazardify returns the function h(t).
+hazardify returns the hazard function h(t).
 
-cumhazardify returns H(t)
+cumhazardify returns the cumulative hazard function H(t)
 
-quantilify returns an estimated quantile function.
+quantilify returns an estimated quantile function q(t).
 }
 \description{
-Couple of functions that extrapolate the S, h, and H functions based on pdf/cdf
+Functions that extrapolate the quantile, Survival, hazard, and cumulative hazard functions for a distribution based on the provided density and/or distribution function(s).
+These functions assume you have a p and d function formatted in the standard format found in native R distribution functions (such as pnorm and dnorm).
 }
 \details{
-S\if{html}{\out{<dist>}} = 1-p\if{html}{\out{<dist>}}
-
-h\if{html}{\out{<dist>}} = d\if{html}{\out{<dist>}} / S\if{html}{\out{<dist>}}
-
-H\if{html}{\out{<dist>}} = -log(S\if{html}{\out{<dist>}})
-
-q\if{html}{\out{<dist>}} = quantile function (p\if{html}{\out{<dist>}})
+\code{survivify} creates a function for 1-p(t).
+\code{hazardify} creates a function for d(t)/S(t).
+\code{cumhazardify} creates a function for -log(S(t)).
+\code{quantilify} approximates a quantile function based on p(t) using numeric root (\code{uniroot}).
 }
 \examples{
 survivify(pnorm)

@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 Please note, AFT/PH specifications are based on model results reviewing by the fssg author team, and may not perfectly reflect how the distribution works in reality. In general, for distributions marked as AFT, a higher effect size (i.e. a positive one) usually implies longer survival time. For distributions marked as PH, a higher effect size usually implies a higher hazard rate. Please take the time to verify that your interpretation of these coefficients is consistent with the model's prediction before publishing or reporting. 
 
 
-```{r setup}
+```{r setup, echo=F}
 library(fssg)
 
 

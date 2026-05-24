@@ -1,6 +1,6 @@
 #' Collect fit statistics for a parametric survival model
 #'
-#' @param model Model object. Currently formatted to work with flexsurvreg objects, and may work for other types of models.
+#' @param model Model object. Currently formatted to work with `flexsurvreg` objects, and may work for other types of models.
 #' @param ibs Logical. If True, calculates the integrated Brier Score, which is a helpful fit statistic but is *much* slower to calculate than all other statistics.
 #'
 #' @returns List of fit statistics for the model.
@@ -16,7 +16,7 @@
 #' get_fit_stats(model = model, ibs = FALSE)
 #'
 #' @details
-#' Table of fit statistics and their source. Please see the vignette \code{vignette("Fit_Statistics")} for more details.
+#' For a table of fit statistics and their sources, please see the vignette \code{vignette("Fit_Statistics")} for more details.
 #'
 #' @export
 get_fit_stats <- function(model, ibs=FALSE){

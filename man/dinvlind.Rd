@@ -26,9 +26,9 @@ dinvlind(1,1)
 \references{
 Sharma, V. K., Singh, S. K., Singh, U., & Agiwal, V. (2015).
 The inverse Lindley distribution: a stress-strength reliability model with application to head and neck cancer data.
-Journal of Industrial and Production Engineering, 32(3), 162-173. \url{https://doi.org/10.1080/21681015.2015.1025901}
+Journal of Industrial and Production Engineering, 32(3), 162-173. \doi{10.1080/21681015.2015.1025901}
 
 Asgharzadeh, Akbar & Alizadeh Sangtarashani, Mojtaba. (2023).
 Inverse Lindley distribution: different methods for estimating their PDF and CDF.
-Journal of Statistical Computation and Simulation. 94. 1-20. \url{https://doi.org/10.1080/00949655.2023.2265011}.
+Journal of Statistical Computation and Simulation. 94. 1-20. \doi{10.1080/21681015.2015.1025901}
 }

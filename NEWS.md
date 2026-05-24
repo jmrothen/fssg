@@ -1,3 +1,3 @@
-# fssg 0.1.0
+# fssg 1.0.0
 
 * Initial CRAN submission.

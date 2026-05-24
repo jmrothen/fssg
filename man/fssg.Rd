@@ -24,7 +24,7 @@ fssg(
 
 \item{data}{If your formula needs a dataset, provide that here.}
 
-\item{models}{Vector of strings. If you only want to run specific models, specify them here by their list name in fssg_dist_list.}
+\item{models}{Vector of strings. If you only want to run specific models, specify them here by their list name in \code{fssg_dist_list}.}
 
 \item{skip}{Vector. If you want to skip any specific models, you can add their names here.
 By default, some of the repetitive or incredibly niche models are skipped.}
@@ -34,9 +34,9 @@ Can be any valid \code{optim} method, and the back-up method will always be 'BFG
 
 \item{spline}{String or Vector of Strings. Include 'rp' or 'wy' for
 Royston-Parmar natural cubic spline, or Wang-Yan alternative natural cubic spline respectively.
-The Wang-Yan version requires the package 'splines2ns'.
+The Wang-Yan version requires the package \code{splines2ns}.
 If set to NA, then the spline step will be skipped.
-fssg runs spline models using all three available scale options in \code{flexsurvspline}, for 'hazard', 'odds' and 'normal.}
+\code{fssg} runs spline models using all three available scale options in \code{flexsurvspline}, for 'hazard', 'odds' and 'normal.}
 
 \item{max_knots}{Integer. Specifies the maximum number of knots to be considered in spline models.}
 
@@ -55,10 +55,10 @@ Please note that this \emph{greatly} increases run time, and is not recommended 
 List containing a summary of the models generated. If dump_models is True, also returns a list of generated models.
 }
 \description{
-fssg: Flexsurv "Shotgun".
+A simple tool for the bulk creation and testing of parametric survival models.
 }
 \details{
-Please see \code{vignette("Fit_Statistics")} for a more in-depth example of the function.
+Please see \code{vignette("fssg")} for a more in-depth example of the function.
 }
 \examples{
 library(survival)

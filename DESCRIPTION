@@ -1,11 +1,14 @@
 Package: fssg
-Title: Flexsurv Shotgun Approach
+Title: Parametric Survival Modeling in Bulk
 Version: 0.1.0
 Authors@R: 
-    person(given='John',family='Rothen',email='jmrothen.business@gmail.com',role = c('aut','cre'), comment=c(ORCID = "0009-0008-4897-8004"))
+    person(given='John',family='Rothen',email='jmrothen.business@gmail.com',role = c('aut','cre','cph'), comment=c(ORCID = "0009-0008-4897-8004"))
 Description: 
-    Test a wide variety of parametric survival models to see which best suits your data.
+    A simple tool for the bulk creation and testing of parametric survival models. 
+    Simply provide 'fssg' with a formula and some data, and let it identify the best distributions for you.
 License: MIT + file LICENSE
+URL: https://github.com/jmrothen/fssg
+BugReports: https://github.com/jmrothen/fssg/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 LinkingTo: 
@@ -28,7 +31,8 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    splines2
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: 

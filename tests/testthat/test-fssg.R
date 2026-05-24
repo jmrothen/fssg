@@ -2,8 +2,9 @@ test_that("fssg runs",{
   expect_no_error(
     fssg(Surv(time, status)~1, data=survival::aml,
          models=c('genf','exp','dagum','lomax','rayleigh','betaprime','fatigue','gamma_gompertz'),
-         warn = TRUE),
-
+         warn = TRUE,
+         spline = 'rp',
+         max_knots = 1, ibs=T, detailed=T),
   )})
 
 # ## raw testing chunk from legacy testing

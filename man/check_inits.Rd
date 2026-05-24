@@ -7,9 +7,9 @@
 check_inits(times, distribution)
 }
 \arguments{
-\item{times}{'Surv' object or numeric vector.}
+\item{times}{\code{Surv} object or numeric vector.}
 
-\item{distribution}{A distribution object from fssg_dist_lists.}
+\item{distribution}{A distribution object from \code{fssg_dist_lists}.}
 }
 \value{
 Boolean indicator for success. If true, then all values can be calculated, and life is good.
@@ -18,7 +18,7 @@ Boolean indicator for success. If true, then all values can be calculated, and l
 Function to check if times can be calculated using the distribution with default inits.
 }
 \details{
-This should work with all fssg custom distribution, but does not work on some of the native flexsurv distributions.
+This should work with all \code{fssg} custom distribution, but does not work on some of the native \code{flexsurv} distributions.
 }
 \examples{
 

@@ -2,10 +2,10 @@
 % Please edit documentation in R/addins.R
 \name{quick_pipe}
 \alias{quick_pipe}
-\title{Simple add-in which lets you keyboard map pipe + newline}
+\title{Simple add-in which lets you keyboard map the writing of pipe + newline. Intended to make functional programming pipelines a little easier on the hands.}
 \usage{
 quick_pipe()
 }
 \description{
-Simple add-in which lets you keyboard map pipe + newline
+Simple add-in which lets you keyboard map the writing of pipe + newline. Intended to make functional programming pipelines a little easier on the hands.
 }
