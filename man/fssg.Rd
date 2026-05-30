@@ -69,6 +69,6 @@ fssg(
   spline = c('rp'),
   max_knots=2,
   warn = TRUE
-)
+)$summary
 
 }

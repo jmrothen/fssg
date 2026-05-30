@@ -68,9 +68,9 @@
 #' )
 #' @export
 fssg_dist <- function(name, pars, location, transforms, inv.transforms, inits, d, p, q=NA, h=NA, H=NA, fullname=''){
-  if(is.na(q)){q <- quantilify(p)}
-  if(is.na(h)){h <- hazardify(d, p)}
-  if(is.na(H)){H <- cumhazardify(p)}
+  if(missing(q)){q <- quantilify(p)}
+  if(missing(h)){h <- hazardify(d, p)}
+  if(missing(H)){H <- cumhazardify(p)}
   return(list(
     name = name,
     pars = pars,
@@ -1006,10 +1006,6 @@ check_inits <- function(times, distribution){
 
   if(!any(dataframe$s)){
     message("Found some weird entries")
-
-    dataframe %>%
-      dplyr::filter(s=F) %>%
-      print()
   }else{
     message("Works at every time point!")
     plot(
@@ -1020,19 +1016,3 @@ check_inits <- function(times, distribution){
 
   invisible(any(dataframe$s))
 }
-
-
-
-# @rdname check_inits
-bulk_check_inits <- function(times){
-  for(i in fssg_dist_list()){
-    print(i$name)
-    tryCatch({
-        check_inits(times, i) %>% print()
-      },
-      error=function(e){print(e)}
-    )
-  }
-}
-
-

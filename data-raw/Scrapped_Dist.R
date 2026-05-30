@@ -168,3 +168,18 @@ fssg_qqplot <- function(flexsurv_output, ...){
   )
   graphics::abline(0,1)
 }
+
+
+
+# @rdname check_inits
+bulk_check_inits <- function(times){
+  for(i in fssg_dist_list()){
+    print(i$name)
+    tryCatch({
+      check_inits(times, i) %>% print()
+    },
+    error=function(e){print(e)}
+    )
+  }
+}
+

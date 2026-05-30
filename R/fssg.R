@@ -41,7 +41,7 @@
 #'   spline = c('rp'),
 #'   max_knots=2,
 #'   warn = TRUE
-#' )
+#' )$summary
 #'
 #' @export
 fssg <- function(
@@ -486,9 +486,6 @@ fssg <- function(
     dplyr::arrange(dist_summary, dist_summary$aic, dist_summary$bic, dplyr::desc(dist_summary$loglik)) -> out
   }
 
-  # always print the summary information
-  print(out)
-
   # Return the summary, and a list of models if the option is provided
   if(dump_models){
     invisible(list(
@@ -496,7 +493,9 @@ fssg <- function(
       models = working_model_list
     ))
   }else{
-    invisible(out)
+    invisible(list(
+      summary = out
+    ))
   }
 }
 

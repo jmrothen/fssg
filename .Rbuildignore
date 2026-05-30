@@ -8,3 +8,4 @@
 ^release.R$
 ^\.positai$
 ^\.claude$
+^CRAN-SUBMISSION$

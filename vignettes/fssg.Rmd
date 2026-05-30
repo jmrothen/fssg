@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 This package was originally inspired some of my other research on Broad Genomic Profiling, where tens to hundreds of genomic mutations are tested in one 'batch' using a single tissue sample. This type of approach has many names, but can be colloquially referred to as a "shotgun" approach, which is where the package gets it's name: *F*lex*S*urv *S*hot*G*un (`fssg`).
 
-To get started with fssg, we'll simply load our package, which will also grab the main dependency `flexsurv`.
+To get started with `fssg`, we'll simply load our package, which will also grab the main dependency `flexsurv`.
 
 ```{r setup}
 library(fssg)
@@ -129,7 +129,7 @@ fssg(
   survival::Surv(time, death) ~ gender, 
   data = pseudo, 
   models = c('gamma_gompertz','gompertz','gumbel','gumbel_T2')
-) 
+)$summary
 ```
 
 
@@ -222,6 +222,8 @@ fssg(
   spline = c('rp','wy'), # include both methods
   max_knots = 3          # attempt up to 3 knots
 ) -> spline_models
+
+spline_models$summary
 
 # Best model has 1 knot
 # plot(spline_models$models$spline_wy_normal_1)
