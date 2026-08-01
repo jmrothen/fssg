@@ -2,9 +2,9 @@
 quick_pipe <- function() {
   if('magrittr' %in% loadedNamespaces()){
     rstudioapi::insertText(" %>% \n")
-    rstudioapi::executeCommand("reindent")
+    # rstudioapi::executeCommand("reindent")
   }else{
     rstudioapi::insertText(" |> \n")
-    rstudioapi::executeCommand("reindent")
+    # rstudioapi::executeCommand("reindent")
   }
 }
