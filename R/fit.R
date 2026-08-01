@@ -65,7 +65,7 @@ get_fit_stats <- function(model, ibs=FALSE){
   #   as.vector(unlist(stats::predict(model, type='rmst')$.pred_rmst)) # use RMST if there are errors in predictions
   # })
 
-  preds <- as.vector(unlist(stats::predict(model, type='link')$.pred_link))
+  preds <- as.vector(unlist(stats::predict(model, type='quantile', p=.5)$.pred_quantile))
 
   # survival rate predictions at {times}, used in IAE, ISE, IBS
   survprob   <- debulk_survprob(stats::predict(model, type='survival', times= times))

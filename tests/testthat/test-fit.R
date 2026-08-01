@@ -1,9 +1,8 @@
 test_that("Fit stats seem to work",{
   expect_equal(
     {
-      fssg_dist_list()$lindley -> testdist
-      flexsurv::flexsurvreg(survival::Surv(time,status) ~age +sex, data=survival::cancer, dist= testdist, dfns = list(d=testdist$d, p=testdist$p)) -> testmodel
-      get_fit_stats(model = testmodel, ibs = F) -> statlist
+      testmodel <- fssg(survival::Surv(time,status) ~age +sex, data=survival::cancer, models = 'lindley', progress = F, warn = F)
+      suppressWarnings(get_fit_stats(model = testmodel$models$lindley, ibs = F)) -> statlist
       for(i in 1:length(statlist)){
         statlist[[i]] <- round(statlist[[i]],7)
       }

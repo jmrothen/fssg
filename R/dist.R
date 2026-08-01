@@ -106,13 +106,13 @@ fssg_dist <- function(name, pars, location, transforms, inv.transforms, inits, d
 #'
 #' @returns A new function of the desired type with the same parameters as the input functions.
 #'
-#' survivify returns the survival function S(t).
+#' `survivify` returns the survival function S(t).
 #'
-#' hazardify returns the hazard function h(t).
+#' `hazardify` returns the hazard function h(t).
 #'
-#' cumhazardify returns the cumulative hazard function H(t)
+#' `cumhazardify` returns the cumulative hazard function H(t)
 #'
-#' quantilify returns an estimated quantile function q(t).
+#' `quantilify` returns an estimated quantile function q(t).
 #'
 #' @examples
 #' survivify(pnorm)
@@ -159,10 +159,10 @@ cumhazardify <- function(p_function){
 quantilify <- function(p_function){
   force(p_function)
   function(p, ...) {
-    lower = -1e6
-    upper = 1e100
+    low = -1e6
+    upp = 1e100
     # for distributions with limited domain, adjust lower bound (handles most cases)
-    lower_init <- if (p_function(0, ...) == 0) 0 else lower
+    lower_init <- if (p_function(0, ...) == 0) 0 else low
     sapply(p,
       function(pi) {
         # handle edge cases
@@ -173,7 +173,7 @@ quantilify <- function(p_function){
         stats::uniroot(
           function(x) p_function(x, ...) - pi,
           lower = lower_init,
-          upper = upper
+          upper = upp
         )$root
       }
     )

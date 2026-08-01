@@ -499,3 +499,71 @@ fssg <- function(
   }
 }
 
+
+
+#' #' Dynamic plotting of fssg models
+#' #'
+#' fssg_plot <- function(fssg_output, newdata=NULL, n_models=5, ribbons=F){
+#'   require(plotly)
+#'   good_models <- fssg_output$summary$dist_name[1:n_models]
+#'   model_list <- fssg_output$models[names(fssg_output$models) %in% good_models]
+#'   model_preds <- data.frame(time=0, est=0, lcl=0,ucl=0, model='NA')[-1,]
+#'
+#'   for(i in model_list){
+#'     y <- summary(i, t=1:max(as.numeric(i$data$m[,1])), type='survival', newdata)[[1]]
+#'     newname  = coalesce(i$dlist$fullname, i$dlist$name)[1]
+#'     model_preds %>% bind_rows(
+#'       mutate(y, model=newname)
+#'     ) -> model_preds
+#'   }
+#'
+#'   km <- survfit(i$data$m[,1] ~ 1)
+#'
+#'   title_name <- paste('Top',n_models,'fssg Models')
+#'
+#'   figure <- plot_ly(
+#'     model_preds,
+#'     x = ~time,
+#'     y = ~est,
+#'     color = ~model,
+#'     type = 'scatter',
+#'     mode= 'lines',
+#'     legendgroup=~model
+#'   ) %>% add_lines(
+#'     x= c(0,km$time),
+#'     y= c(1,km$surv),
+#'     color='red',
+#'     legendgroup='km',
+#'     name='Kaplan-Meier',
+#'     line=list(shape='hv')
+#'   ) %>% add_markers(
+#'     x= c(0,km$time),
+#'     y= c(1,km$surv),
+#'     color='red',
+#'     legendgroup='km-dots',
+#'     name='Kaplan-Meier',
+#'     showlegend=F
+#'   ) %>% layout(
+#'     title = title_name,
+#'     xaxis = list(title='Time'),
+#'     yaxis = list(title='Survival Probability'),
+#'     hovermode='x unified'
+#'   )
+#'
+#'
+#'   # if(ribbons){
+#'   #   figure %>% add_ribbons(
+#'   #     model_preds,
+#'   #     x=~time,
+#'   #     ymin=~lcl,
+#'   #     ymax=~ucl,
+#'   #     legendgroup=~model,
+#'   #     linetype='dashed',
+#'   #     alpha=.25,
+#'   #     strokes=.25,
+#'   #     showlegend=F,
+#'   #     inherit=T
+#'   #   ) -> figure
+#'   # }
+#'   return(figure)
+#' }

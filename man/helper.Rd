@@ -24,13 +24,13 @@ quantilify(p_function)
 \value{
 A new function of the desired type with the same parameters as the input functions.
 
-survivify returns the survival function S(t).
+\code{survivify} returns the survival function S(t).
 
-hazardify returns the hazard function h(t).
+\code{hazardify} returns the hazard function h(t).
 
-cumhazardify returns the cumulative hazard function H(t)
+\code{cumhazardify} returns the cumulative hazard function H(t)
 
-quantilify returns an estimated quantile function q(t).
+\code{quantilify} returns an estimated quantile function q(t).
 }
 \description{
 Functions that extrapolate the quantile, Survival, hazard, and cumulative hazard functions for a distribution based on the provided density and/or distribution function(s).
